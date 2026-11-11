@@ -6,15 +6,15 @@
 <title>2100 St. Claude Ave — Site Planner</title>
 <style>
 :root{
-  --paper:#e9f1fa; --ink:#1d2a38; --muted:#5b6b7c; --line:#d2dceb;
-  --grid1:#d3e1f2; --grid5:#b8cde8; --grid10:#94b2da;
-  --prop:#d1495b; --accent:#2f7f95; --bus:#ffffff; --panel:#fbfdff;
+  --paper:#f1e2b3; --ink:#2b2418; --muted:#6e5f45; --line:#dcc893;
+  --grid1:#e6d39e; --grid5:#d8bf82; --grid10:#c4a464;
+  --prop:#d1495b; --accent:#2f7f95; --bus:#ffffff; --panel:#fdf7e6;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
   font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
-header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--line);background:#f4f8fd}
+header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--line);background:#f6e9c2}
 header h1{font-size:16px;margin:0;letter-spacing:.2px}
 header .sub{color:var(--muted);font-size:12.5px}
 main{flex:1;display:flex;min-height:0}
@@ -28,7 +28,7 @@ aside{width:350px;display:flex;flex-direction:column;border-left:1px solid var(-
 .tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
 .pbody{overflow:auto;padding:12px 14px 24px;flex:1}
 .tab{display:none}.tab.on{display:block}
-button.btn{font:inherit;border:1px solid #c3cfdf;background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer;color:var(--ink);white-space:nowrap}
+button.btn{font:inherit;border:1px solid #d6c08c;background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer;color:var(--ink);white-space:nowrap}
 button.btn:hover{background:#f3f4ef}
 button.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
 button.btn.bus{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700;flex:1;font-size:15px}
@@ -45,7 +45,7 @@ textarea{width:100%;height:70px;font-size:12px;font-family:ui-monospace,Menlo,mo
 .stats .v{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
 .ok{color:#1f7a45}.bad{color:#b23a1f}
 table.code{width:100%;border-collapse:collapse;font-size:13px}
-table.code td{padding:5px 4px;border-bottom:1px solid #eceee6;vertical-align:top}
+table.code td{padding:5px 4px;border-bottom:1px solid #eadfc2;vertical-align:top}
 table.code td:last-child{text-align:right;font-weight:600;white-space:nowrap}
 .legend{display:grid;grid-template-columns:34px 1fr;gap:6px 8px;align-items:center;font-size:13px}
 .sw{width:30px;height:16px;border-radius:3px}
@@ -57,7 +57,7 @@ ul.src{padding-left:18px;font-size:12.5px;margin:6px 0}
 #zoomctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
 #zoomctl button{width:40px;height:40px;border-radius:10px;border:1px solid #c9cdc2;background:#fff;font-size:20px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 #zoomctl button.fit{font-size:12px;font-weight:700}
-#selbar{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-height:70%;overflow:auto;background:#fff;border:1px solid #c3cfdf;border-radius:14px;box-shadow:0 6px 20px rgba(30,50,80,.16);padding:10px 12px;display:none;width:min(560px,calc(100% - 130px))}
+#selbar{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-height:70%;overflow:auto;background:#fff;border:1px solid #d6c08c;border-radius:14px;box-shadow:0 6px 20px rgba(30,50,80,.16);padding:10px 12px;display:none;width:min(560px,calc(100% - 130px))}
 #selbar.on{display:block}
 #selbar .t{font-weight:700;font-size:13.5px}
 #selbar .d{font-size:12px;color:var(--muted);margin:2px 0 6px}
@@ -65,7 +65,7 @@ ul.src{padding-left:18px;font-size:12.5px;margin:6px 0}
 #sizeRows{display:none;margin:0 0 7px}
 #sizeRows.on{display:block}
 .chips{display:flex;gap:6px;margin:2px 0 6px;flex-wrap:wrap}
-.chips button{font:inherit;font-size:12.5px;border:1px solid #c3cfdf;background:#fff;border-radius:999px;padding:5px 10px;cursor:pointer;color:var(--ink)}
+.chips button{font:inherit;font-size:12.5px;border:1px solid #d6c08c;background:#fff;border-radius:999px;padding:5px 10px;cursor:pointer;color:var(--ink)}
 .chips button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 #driveRows{display:none;margin:0 0 7px}
 #driveRows.on{display:block}
@@ -114,21 +114,21 @@ body.editing #hint{display:none}
     <svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
       <defs>
         <pattern id="g1" width="1" height="1" patternUnits="userSpaceOnUse">
-          <path d="M1 0H0V1" fill="none" stroke="#d3e1f2" stroke-width=".04"/>
+          <path d="M1 0H0V1" fill="none" stroke="#e6d39e" stroke-width=".04"/>
         </pattern>
         <pattern id="g10" width="10" height="10" patternUnits="userSpaceOnUse">
           <rect width="10" height="10" fill="url(#g1)"/>
-          <path d="M5 0V10M0 5H10" fill="none" stroke="#b8cde8" stroke-width=".07"/>
-          <path d="M10 0H0V10" fill="none" stroke="#94b2da" stroke-width=".12"/>
+          <path d="M5 0V10M0 5H10" fill="none" stroke="#d8bf82" stroke-width=".07"/>
+          <path d="M10 0H0V10" fill="none" stroke="#c4a464" stroke-width=".12"/>
         </pattern>
         <pattern id="g10b" width="10" height="10" patternUnits="userSpaceOnUse">
-          <path d="M10 0H0V10" fill="none" stroke="#94b2da" stroke-width=".12"/>
+          <path d="M10 0H0V10" fill="none" stroke="#c4a464" stroke-width=".12"/>
         </pattern>
         <pattern id="hatch" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width="2" height="2" fill="#ffffff"/><path d="M0 0V2" stroke="#e3e9f1" stroke-width=".3"/>
         </pattern>
         <pattern id="hatchN" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
-          <rect width="2.4" height="2.4" fill="#dfe6ef"/><path d="M0 0V2.4" stroke="#cbd5e2" stroke-width=".3"/>
+          <rect width="2.4" height="2.4" fill="#e4d4ab"/><path d="M0 0V2.4" stroke="#cfbb8c" stroke-width=".3"/>
         </pattern>
         <pattern id="driveHatch" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <path d="M0 0V1.6" stroke="rgba(64,92,130,.30)" stroke-width=".42"/>
@@ -145,6 +145,7 @@ body.editing #hint{display:none}
     <div id="hint">Tap a piece or the driveway to edit · drag to move · ⟳ handle rotates · pinch/scroll to zoom</div>
     <div id="selbar">
       <div class="t" id="selT"></div>
+      <div id="nbInfo" class="note" style="display:none;margin:4px 0 8px;color:var(--ink);font-size:13px;line-height:1.45"></div>
       <div class="d" id="selD"></div>
       <div id="driveRows">
         <div class="chips" id="dTypes">
@@ -164,9 +165,10 @@ body.editing #hint{display:none}
         <div class="dr"><span>Length</span><input type="range" id="sL" min="2" max="84" step="1" aria-label="Length in feet"><b id="sLv"></b></div>
         <div class="dr"><span>Width</span><input type="range" id="sW" min="2" max="56" step="1" aria-label="Width in feet"><b id="sWv"></b></div>
       </div>
+      <div class="row hide" id="nbBtns"><button class="btn small" id="nbClose">Close</button></div>
       <div class="row hide" id="driveBtns">
         <button class="btn small" id="driveDone">Done</button>
-        <button class="btn small danger" id="driveHide">Hide driveway</button>
+        <button class="btn small danger" id="driveHide">Remove driveway</button>
       </div>
       <div class="row" id="itemBtns">
         <button class="btn small" data-act="rl" title="Rotate left 15°">⟲ 15°</button>
@@ -192,13 +194,13 @@ body.editing #hint{display:none}
     <div class="tabs">
       <button class="on" data-tab="t-layout">Layout</button>
       <button data-tab="t-key">Key &amp; Codes</button>
-      <button data-tab="t-plans">Saved Plans</button>
     </div>
     <div class="pbody">
       <!-- LAYOUT -->
       <section class="tab on" id="t-layout">
         <h3>Add more pieces</h3>
         <div class="row">
+          <button class="btn small" id="addDrive">+ Driveway</button>
           <button class="btn small" data-add="stall">+ Car stall 9×18</button>
           <button class="btn small" data-add="tent">+ Canopy 10×10</button>
           <button class="btn small" data-add="green">+ Green space 10×10</button>
@@ -215,8 +217,6 @@ body.editing #hint{display:none}
         <h3>View &amp; options</h3>
         <label class="chk"><input type="checkbox" id="optSnap" checked> Snap to 1-ft grid (rotation in 5° steps)</label>
         <label class="chk"><input type="checkbox" id="optBldg" checked> Show existing building (and treat it as an obstacle)</label>
-        <label class="chk"><input type="checkbox" id="optDrive"> Driveway <span class="note">(tap it on the map to change type or size)</span></label>
-        <label class="chk"><input type="checkbox" id="optSight"> Show corner clear-view guide (planning aid)</label>
         <div class="row"><span>Clearance around buses:</span>
           <select id="optHalo"><option value="0">none</option><option value="3" selected>3 ft</option><option value="5">5 ft</option><option value="10">10 ft</option></select>
         </div>
@@ -224,16 +224,8 @@ body.editing #hint{display:none}
         <h3>Site numbers</h3>
         <div class="stats" id="stats"></div>
 
-        <h3>Share this layout</h3>
-        <p class="note" style="margin-top:0" id="shareIntro">Your layout saves automatically on this device. <b>Copy share link</b> gives you a link that opens with this exact layout. Or copy the layout code and a friend can paste it in below.</p>
-        <div class="row">
-          <button class="btn small primary" id="shareLink">Copy share link</button>
-          <button class="btn small" id="copyCode">Copy layout code</button>
-          <button class="btn small" id="loadCode">Load pasted code</button>
-          <button class="btn small danger" id="clearAll">Clear all</button>
-        </div>
-        <textarea id="codeBox" placeholder="Paste a layout code here, then tap “Load pasted code”."></textarea>
-        <div class="note" id="codeMsg"></div>
+        <p class="note" style="margin-top:14px">Tap any piece or the driveway to resize, rotate or delete it. Your layout saves on this device.</p>
+        <div class="row"><button class="btn small danger" id="clearAll">Start over</button></div>
       </section>
 
       <!-- KEY -->
@@ -242,13 +234,12 @@ body.editing #hint{display:none}
         <div class="legend">
           <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="url(#g10)" stroke="#d1495b" stroke-width="2" stroke-dasharray="5 3"/></svg><span><b>Property line</b> — 84′ on St. Claude × 56′ on Frenchmen</span>
           <svg class="sw" viewBox="0 0 30 16"><rect x="3" y="3" width="24" height="10" fill="none" stroke="#2f7f95" stroke-width="1.5"/></svg><span><b>Buildable area</b> — HMC-2 requires 0′ setbacks, so it matches the property line</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="#fff" stroke="#6f8196"/></svg><span><b>Existing building</b> — outline from the city's building-footprint layer: a front block plus a rear wing that runs to the 2112 St. Claude wall, ≈1,225 SF under roof (the listing counts 352 SF of enclosed space)</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="#fff" stroke="#6f8196"/></svg><span><b>Existing building</b> — the enclosed tire shop (solid) with its open canopy toward St. Claude (dashed). Outline from the city's building footprints, checked against Feb 2025 street-level photos. Tap it, or a neighboring lot, for details.</span>
           <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="2" width="28" height="12" rx="2" fill="#fff" stroke="#4a5868"/></svg><span><b>Bus</b> — starts 32′ × 8′; tap it for length (15–45′) and width sliders; ▶ marks the front. Every piece has length and width sliders.</span>
           <svg class="sw" viewBox="0 0 30 16"><rect x="2" y="2" width="26" height="12" rx="3" fill="none" stroke="#5a9bb0" stroke-dasharray="3 2"/></svg><span><b>Clearance ring</b> — your chosen walk-around/egress space</span>
           <svg class="sw" viewBox="0 0 30 16"><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="#8ea2ba" stroke-width="6.6"/><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="#e3eaf3" stroke-width="6"/><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="url(#driveHatch)" stroke-width="6"/></svg><span><b>Driveway</b> — a U on St. Claude, a U on Frenchmen, or angled (in on Frenchmen, out on St. Claude). Tap it to switch type, use the sliders, or drag its handles.</span>
           <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="url(#grass)" stroke="#4f8a3c"/></svg><span><b>Green space</b> — counts toward the 15% permeable minimum</span>
           <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="2" width="28" height="12" rx="2" fill="#fff" stroke="#d1495b" stroke-width="2.5"/></svg><span><b>Red outline</b> — piece crosses a property line or overlaps something</span>
-          <svg class="sw" viewBox="0 0 30 16"><path d="M1 1H29L1 15Z" fill="rgba(52,120,200,.18)" stroke="#3478c8" stroke-dasharray="3 2"/></svg><span><b>Corner clear-view guide</b> — 15′ planning triangle, not a CZO number</span>
         </div>
 
         <h3>HMC-2 zoning (CZO Table 10-2)</h3>
@@ -286,7 +277,7 @@ body.editing #hint{display:none}
           <tr><td>Buyer's premium / deposit</td><td>10% / 10% in 48 hrs</td></tr>
           <tr><td>Terms</td><td>Cash, as-is, with reserve</td></tr>
         </table>
-        <p class="note">This is not a survey. The lot size comes from the assessor's record (84′ × 56′); the city's GIS parcel outline draws it a bit bigger (about 89′ × 58′). The building outline is the city's building footprint (traced from aerial imagery), checked against the aerial photo. Street widths are approximate. Get a current survey before you commit to a layout.</p>
+        <p class="note">This is not a survey. The lot size comes from the assessor's record (84′ × 56′); the city's GIS parcel outline draws it a bit bigger (about 89′ × 58′). The building outline is the city's building footprint, checked against Feb 2025 street-level photos (the city layer's rear wing isn't there anymore). Street widths are approximate. Get a current survey before you commit to a layout.</p>
 
         <h3>Sources</h3>
         <ul class="src">
@@ -301,16 +292,6 @@ body.editing #hint{display:none}
       </section>
 
       <!-- PLANS -->
-      <section class="tab" id="t-plans">
-        <h3>Saved plans</h3>
-        <p class="note" style="margin-top:0" id="plansIntro">Name a layout and save it so anyone with the link who's signed in to Claude can load it.</p>
-        <div class="row">
-          <input type="text" id="planName" placeholder="e.g. Two buses on St. Claude" style="flex:1;min-width:150px" maxlength="60">
-          <button class="btn small primary" id="savePlan">Save plan</button>
-        </div>
-        <div class="note" id="planMsg"></div>
-        <div id="planList" style="margin-top:8px"></div>
-      </section>
     </div>
   </aside>
 </main>
@@ -319,11 +300,15 @@ body.editing #hint{display:none}
 (function(){
 "use strict";
 const LOT_W=84, LOT_H=56, LOT_AREA=LOT_W*LOT_H;
-// Existing building: City of New Orleans building-footprint layer (traced from aerial imagery),
-// converted to lot coordinates (x = ft from the Frenchmen line, y = ft back from the St. Claude line).
-const BLDG_POLY=[[38.2,22.4],[57.5,23.0],[57.3,34.2],[72.6,34.2],[72.9,34.9],[84,34.9],[84,56],[58.3,56],[58.6,52.2],[35.4,52],[35.7,43.6],[28.4,43.1],[28.7,35.7],[35.6,35.8],[35.4,39],[37.6,39.2]];
-const BLDG_PARTS=[[[38.2,22.4],[57.5,22.4],[57.5,34.6],[38.2,34.6]],[[35.4,34.2],[58.6,34.2],[58.6,52.1],[35.4,52.1]],[[57.3,34.4],[84,34.4],[84,56],[57.3,56]],[[28.4,35.7],[35.7,35.7],[35.7,43.6],[28.4,43.6]]];
-const BLDG_AREA=(()=>{let a=0;for(let i=0;i<BLDG_POLY.length;i++){const p=BLDG_POLY[i],q=BLDG_POLY[(i+1)%BLDG_POLY.length];a+=p[0]*q[1]-q[0]*p[1];}return Math.abs(a)/2;})();
+// Existing structures, from the City of New Orleans building-footprint layer, checked against
+// Feb 2025 street-level photos (the footprint's rear wing toward 2112 isn't there; that area is open concrete).
+// Lot coordinates: x = ft from the Frenchmen line, y = ft back from the St. Claude line.
+const BLDG_SHOP=[[35.4,34.2],[58.6,34.2],[58.6,52.1],[35.4,52.1]];   // enclosed tire shop (gable faces Frenchmen)
+const BLDG_BOX=[[28.4,35.7],[35.4,35.7],[35.4,43.6],[28.4,43.6]];    // small attached box on the Frenchmen side
+const BLDG_CANOPY=[[38.2,22.4],[57.5,22.4],[57.5,34.2],[38.2,34.2]]; // open canopy on posts toward St. Claude
+const BLDG_PARTS=[BLDG_SHOP,BLDG_BOX,BLDG_CANOPY];
+const polyArea=P=>{let a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1];}return Math.abs(a)/2;};
+const BLDG_AREA=polyArea(BLDG_SHOP)+polyArea(BLDG_BOX)+polyArea(BLDG_CANOPY);
 function hitsBldg(P){return BLDG_PARTS.some(q=>overlap(P,q));}
 const TYPES={
   bus:{name:"Bus",l:32,w:8,kind:"bus"},
@@ -333,7 +318,7 @@ const TYPES={
   container20:{name:"20′ container",l:20,w:8,kind:"box"},
   custom:{name:"Custom",l:12,w:8,kind:"box"}
 };
-const STORE="stclaude2100-plan-v2";
+const STORE="stclaude2100-plan-v3";
 const svg=document.getElementById("svg");
 const gBase=document.getElementById("base"), gOver=document.getElementById("overlay"), gItems=document.getElementById("items");
 const NS="http://www.w3.org/2000/svg";
@@ -406,20 +391,20 @@ const r1=n=>Math.round(n*10)/10;
 function drawBase(){
   const s=[];
   // graph paper everywhere
-  s.push(`<rect x="-300" y="-300" width="700" height="600" fill="#e9f1fa"/>`);
+  s.push(`<rect x="-300" y="-300" width="700" height="600" fill="#f1e2b3"/>`);
   s.push(`<rect x="-300" y="-300" width="700" height="600" fill="url(#g10b)" opacity=".55"/>`);
   // St. Claude Ave (north). Sidewalk 0..-10, road -10..-58, far sidewalk -58..-68
-  s.push(`<rect x="-300" y="-10" width="700" height="10" fill="#dbe3ee"/>`);
-  s.push(`<rect x="-300" y="-58" width="700" height="48" fill="#66727f"/>`);
-  s.push(`<rect x="-300" y="-68" width="700" height="10" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-300" y="-10" width="700" height="10" fill="#e6d8b4"/>`);
+  s.push(`<rect x="-300" y="-58" width="700" height="48" fill="#6c665d"/>`);
+  s.push(`<rect x="-300" y="-68" width="700" height="10" fill="#e6d8b4"/>`);
   // Frenchmen St (west). sidewalk -8..0, road -36..-8, far sidewalk -44..-36
-  s.push(`<rect x="-8" y="0" width="8" height="300" fill="#dbe3ee"/>`);
-  s.push(`<rect x="-36" y="-58" width="28" height="358" fill="#66727f"/>`);
-  s.push(`<rect x="-44" y="0" width="8" height="300" fill="#dbe3ee"/>`);
-  s.push(`<rect x="-44" y="-68" width="8" height="10" fill="#dbe3ee"/>`);
-  s.push(`<rect x="-8" y="-68" width="8" height="10" fill="#dbe3ee"/>`);
-  s.push(`<rect x="-8" y="-10" width="8" height="10" fill="#dbe3ee"/>`);
-  s.push(`<rect x="-44" y="-10" width="8" height="10" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-8" y="0" width="8" height="300" fill="#e6d8b4"/>`);
+  s.push(`<rect x="-36" y="-58" width="28" height="358" fill="#6c665d"/>`);
+  s.push(`<rect x="-44" y="0" width="8" height="300" fill="#e6d8b4"/>`);
+  s.push(`<rect x="-44" y="-68" width="8" height="10" fill="#e6d8b4"/>`);
+  s.push(`<rect x="-8" y="-68" width="8" height="10" fill="#e6d8b4"/>`);
+  s.push(`<rect x="-8" y="-10" width="8" height="10" fill="#e6d8b4"/>`);
+  s.push(`<rect x="-44" y="-10" width="8" height="10" fill="#e6d8b4"/>`);
   // lane marks St Claude (outside the intersection)
   const laneSeg=(y,col,dash)=>`<path d="M-300 ${y}H-36M-8 ${y}H400" stroke="${col}" stroke-width=".35" ${dash?'stroke-dasharray="3 4"':''}/>`;
   s.push(laneSeg(-22,"#f4f1e6",true)); s.push(laneSeg(-46,"#f4f1e6",true));
@@ -436,17 +421,20 @@ function drawBase(){
   s.push(`<text x="0" y="0" font-size="3" font-weight="700" fill="#f4f1e6" text-anchor="middle" letter-spacing=".6" transform="translate(-16.6 30) rotate(-90)">FRENCHMEN ST.</text>`);
   // neighbors
   // 2112 St. Claude: 28' x 56' lot, building covers most of it
-  s.push(`<rect x="84" y="0" width="28" height="56" fill="#e2e9f2" stroke="#a7b4c5" stroke-width=".25" stroke-dasharray="1.2 .8"/>`);
-  s.push(`<rect x="84.3" y="1" width="20" height="44" fill="url(#hatchN)" stroke="#b3c0cf" stroke-width=".2"/>`);
-  s.push(`<text x="98" y="24" font-size="1.9" fill="#5f6d7d" text-anchor="middle">2112 St. Claude</text><text x="98" y="26.6" font-size="1.6" fill="#5f6d7d" text-anchor="middle">28′×56′ lot · bar bldg</text>`);
+  s.push(`<g data-nb="2112" style="cursor:pointer"><rect x="84" y="0" width="28" height="56" fill="#eadcb6" stroke="#b9a271" stroke-width=".25" stroke-dasharray="1.2 .8"/>`);
+  s.push(`<rect x="84.3" y="0.3" width="27.4" height="55.4" fill="url(#hatchN)" stroke="#c5ae7c" stroke-width=".2"/>`);
+  s.push(`<text x="98" y="24" font-size="1.9" fill="#6b5a3e" text-anchor="middle">2112 St. Claude</text><text x="98" y="26.6" font-size="1.6" fill="#6b5a3e" text-anchor="middle">28′×56′ lot · bar bldg</text><text x="98" y="29.4" font-size="1.4" fill="#2f7f95" text-anchor="middle">tap for owner info</text></g>`);
   // 1031 Frenchmen: 28' x 112' lot behind both St. Claude lots
-  s.push(`<rect x="0" y="56" width="112" height="28" fill="#e2e9f2" stroke="#a7b4c5" stroke-width=".25" stroke-dasharray="1.2 .8"/>`);
-  s.push(`<rect x="0.3" y="59.5" width="62" height="19" fill="url(#hatchN)" stroke="#b3c0cf" stroke-width=".2"/>`);
-  s.push(`<text x="31" y="68.6" font-size="1.9" fill="#5f6d7d" text-anchor="middle">1031 Frenchmen St. (house)</text>`);
-  s.push(`<text x="31" y="71.3" font-size="1.6" fill="#5f6d7d" text-anchor="middle">28′ × 112′ lot runs behind both St. Claude lots</text>`);
-  s.push(`<text x="${LOT_W/2+16}" y="58.4" font-size="1.45" fill="#8a4b3c" text-anchor="middle" font-style="italic">shared rear lot line — no alley in this square</text>`);
+  s.push(`<g data-nb="1031" style="cursor:pointer"><rect x="0" y="56" width="112" height="28" fill="#eadcb6" stroke="#b9a271" stroke-width=".25" stroke-dasharray="1.2 .8"/>`);
+  s.push(`<rect x="0.3" y="63.5" width="62" height="17.6" fill="url(#hatchN)" stroke="#c5ae7c" stroke-width=".2"/>`);
+  s.push(`<text x="31" y="71" font-size="1.9" fill="#6b5a3e" text-anchor="middle">1031 Frenchmen St. (house)</text>`);
+  s.push(`<text x="31" y="73.6" font-size="1.6" fill="#6b5a3e" text-anchor="middle">28′ × 112′ lot runs behind both St. Claude lots</text>`);
+  s.push(`<text x="31" y="76.2" font-size="1.4" fill="#2f7f95" text-anchor="middle">tap for owner info</text></g>`);
+  // wood fence seen along the rear line in Feb 2025 street view
+  s.push(`<path d="M0 56.35H84" stroke="#a0714f" stroke-width=".35" stroke-dasharray=".9 .5" pointer-events="none"/>`);
+  s.push(`<text x="${LOT_W/2+16}" y="58.4" font-size="1.45" fill="#8a4b3c" text-anchor="middle" font-style="italic">shared rear lot line (wood fence) — no alley in this square</text>`);
   // lot
-  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="#f6f9fd"/>`);
+  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="#fbf3d8"/>`);
   s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="url(#g10)"/>`);
   s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#2f7f95" stroke-width=".25" opacity=".9"/>`);
   s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#d1495b" stroke-width=".55" stroke-dasharray="2.2 1.1"/>`);
@@ -474,13 +462,19 @@ function drawOverlay(){
     s.push(`<text x="4.2" y="4.6" font-size="1.3" fill="#215a99">clear view</text>`);
   }
   if(state.opts.bldg){
-    const pts=BLDG_POLY.map(p=>p.join(",")).join(" ");
-    s.push(`<polygon points="${pts}" transform="translate(.5 .6)" fill="rgba(60,90,130,.13)"/>`);
-    s.push(`<polygon points="${pts}" fill="#ffffff" stroke="#6f8196" stroke-width=".3" stroke-linejoin="round"/>`);
-    s.push(`<text x="47.8" y="28" font-size="1.7" font-weight="700" fill="#3c4b5c" text-anchor="middle">EXISTING</text>`);
-    s.push(`<text x="47.8" y="30.2" font-size="1.7" font-weight="700" fill="#3c4b5c" text-anchor="middle">BUILDING</text>`);
-    s.push(`<text x="58" y="44.6" font-size="1.2" fill="#55667a" text-anchor="middle">≈${Math.round(BLDG_AREA).toLocaleString()} SF roofed</text>`);
-    s.push(`<text x="58" y="46.3" font-size="1.05" fill="#7a8a9c" text-anchor="middle">city building footprint</text>`);
+    const P=q=>q.map(p=>p.join(",")).join(" ");
+    s.push(`<g data-nb="bldg" style="cursor:pointer">`);
+    [BLDG_SHOP,BLDG_BOX,BLDG_CANOPY].forEach(q=>s.push(`<polygon points="${P(q)}" transform="translate(.5 .6)" fill="rgba(60,90,130,.13)"/>`));
+    s.push(`<polygon points="${P(BLDG_CANOPY)}" fill="#ffffff" stroke="#6f8196" stroke-width=".25" stroke-dasharray="1 .6"/>`);
+    s.push(`<path d="M38.2 22.4L57.5 34.2M57.5 22.4L38.2 34.2" stroke="#d3dbe6" stroke-width=".18"/>`);
+    [[38.6,22.8],[57.1,22.8],[38.6,33.8],[57.1,33.8]].forEach(([x,y])=>s.push(`<rect x="${x-.35}" y="${y-.35}" width=".7" height=".7" fill="#6f8196"/>`));
+    s.push(`<polygon points="${P(BLDG_SHOP)}" fill="#ffffff" stroke="#55677b" stroke-width=".32"/>`);
+    s.push(`<polygon points="${P(BLDG_BOX)}" fill="#ffffff" stroke="#55677b" stroke-width=".28"/>`);
+    s.push(`<text x="47.9" y="28.9" font-size="1.4" fill="#55667a" text-anchor="middle">canopy (open)</text>`);
+    s.push(`<text x="47" y="42.4" font-size="1.7" font-weight="700" fill="#3c4b5c" text-anchor="middle">EXISTING</text>`);
+    s.push(`<text x="47" y="44.6" font-size="1.7" font-weight="700" fill="#3c4b5c" text-anchor="middle">TIRE SHOP</text>`);
+    s.push(`<text x="47" y="46.8" font-size="1.2" fill="#7a8a9c" text-anchor="middle">tap for details</text>`);
+    s.push(`</g>`);
   }
   gOver.innerHTML=s.join("");
 }
@@ -611,7 +605,7 @@ function drawDrive(R){
   if(isSel) g+=st("rgba(47,127,149,.08)",w);
   g+=st("rgba(246,249,253,.55)",w)+st("rgba(110,138,172,.18)",w)+st("url(#driveHatch)",w);
   G.chev.forEach(pts=>{ g+=`<path d="M${pts.map(p=>p.join(" ")).join("L")}" fill="none" stroke="#5d7795" stroke-width=".38" stroke-linecap="round" stroke-linejoin="round" opacity=".75" pointer-events="none"/>`; });
-  if(!isSel) G.labels.forEach(l=>{ g+=`<text x="${l.x}" y="${l.y}" font-size="1.5" font-weight="700" fill="#e9f1fa" text-anchor="middle"${l.rot?` transform="rotate(${l.rot} ${l.x} ${l.y})"`:""} pointer-events="none">${esc(l.t)}</text>`; });
+  if(!isSel) G.labels.forEach(l=>{ g+=`<text x="${l.x}" y="${l.y}" font-size="1.5" font-weight="700" fill="#f1e2b3" text-anchor="middle"${l.rot?` transform="rotate(${l.rot} ${l.x} ${l.y})"`:""} pointer-events="none">${esc(l.t)}</text>`; });
   g+=`<path data-drive="1" d="${path}" fill="none" stroke="rgba(0,0,0,0)" stroke-width="${w}" stroke-linejoin="${J}" style="cursor:pointer" pointer-events="stroke"/>`;
   if(isSel){
     const rr=hr();
@@ -631,8 +625,33 @@ function render(){
 let lastSel=null;
 const setR=(id,v,min,max)=>{const el=document.getElementById(id); el.min=min; el.max=max; if(document.activeElement!==el) el.value=v; document.getElementById(id+"v").textContent=fmt(v)+"′";};
 const showRow=(id,on)=>{document.getElementById(id).closest(".dr").style.display=on?"flex":"none";};
+const NB={
+  "2112":{t:"2112 St. Claude Ave — next door (east)",h:`<div>Sq. 374, Lots 3 or 8 · 28′ × 56′ · frame bar building · zoned HMC-2</div>
+    <div style="margin-top:6px"><b>Owner of record:</b> SJH Properties LLC</div>
+    <div><b>Tax mailing address:</b> c/o Greater New Orleans Historical Neighborhoods Revitalization Program LLC, P.O. Box 7473, Metairie, LA 70010</div>
+    <div class="note" style="margin-top:6px">Tax bill 37W102208 · from the Orleans Parish Assessor record on the city's <a href="https://property.nola.gov/" target="_blank" rel="noopener">Property Viewer</a>. For a phone number or registered agent, look the LLC up with the Louisiana Secretary of State.</div>`},
+  "1031":{t:"1031 Frenchmen St. — behind the lot (south)",h:`<div>Sq. 374, Lot 21 · 28′ × 112′ · a double (two-family house) · zoned HMC-2 · runs behind both 2100 and 2112 St. Claude</div>
+    <div style="margin-top:6px"><b>Owner of record:</b> a private individual. Their name and tax mailing address are public on the city's <a href="https://property.nola.gov/" target="_blank" rel="noopener">Property Viewer</a> (search tax bill <b>37W102206</b>). They aren't copied onto this shareable page.</div>
+    <div class="note" style="margin-top:6px">The tax bills go to an out-of-state address, so it's likely a rental. A letter to the mailing address on file is the usual first contact.</div>`},
+  "bldg":{t:"Existing structures on 2100 St. Claude",h:`<div><b>Tire shop (enclosed):</b> ≈23′ × 18′, about 34–52′ back from St. Claude. Its gable end faces Frenchmen.</div>
+    <div><b>Canopy:</b> ≈19′ × 12′ open gabled canopy on posts in front of the shop, toward St. Claude.</div>
+    <div><b>Small box:</b> ≈7′ × 8′ attached on the Frenchmen side.</div>
+    <div class="note" style="margin-top:6px">Outline: city building-footprint layer, checked against Feb 2025 street-level photos. The city layer also shows a rear wing toward 2112 St. Claude, but the photos show open concrete there, so it's left off. The listing counts 352 SF of enclosed space. Verify on site.</div>`}
+};
 function renderSel(R){
   const bar=document.getElementById("selbar");
+  const nbKey=(typeof sel==="string"&&sel.indexOf("nb:")===0)?sel.slice(3):null;
+  const nbEl=document.getElementById("nbInfo");
+  document.getElementById("nbBtns").classList.toggle("hide",!nbKey);
+  nbEl.style.display=nbKey?"block":"none";
+  if(nbKey&&NB[nbKey]){
+    ["driveRows","sizeRows"].forEach(id=>document.getElementById(id).classList.remove("on"));
+    ["driveBtns","itemBtns"].forEach(id=>document.getElementById(id).classList.add("hide"));
+    document.getElementById("selT").textContent=NB[nbKey].t;
+    document.getElementById("selD").textContent="";
+    nbEl.innerHTML=NB[nbKey].h;
+    bar.classList.add("on"); document.body.classList.add("editing"); lastSel=sel; return;
+  }
   const isDrive=sel==="drive"&&state.drive.on;
   document.getElementById("driveRows").classList.toggle("on",isDrive);
   document.getElementById("driveBtns").classList.toggle("hide",!isDrive);
@@ -747,7 +766,8 @@ svg.addEventListener("pointerdown",e=>{
     drag={it,ox:p.x-it.x,oy:p.y-it.y,sx:e.clientX,sy:e.clientY,moved:false};
     render(); e.preventDefault(); return;
   }
-  mode="pan"; drag={inv,p0:p,v0:{...view},sx:e.clientX,sy:e.clientY,moved:false}; svg.classList.add("panning");
+  const nbHit=e.target.closest("[data-nb]");
+  mode="pan"; drag={inv,p0:p,v0:{...view},sx:e.clientX,sy:e.clientY,moved:false,nb:nbHit?nbHit.dataset.nb:null}; svg.classList.add("panning");
 });
 svg.addEventListener("pointermove",e=>{
   if(!ptrs.has(e.pointerId)) return;
@@ -790,7 +810,7 @@ svg.addEventListener("pointermove",e=>{
 function endPtr(e){
   ptrs.delete(e.pointerId);
   if(mode==="pinch"){ if(ptrs.size<2){mode=null;drag=null;} return; }
-  if(mode==="pan" && drag && !drag.moved){ sel=null; render(); }
+  if(mode==="pan" && drag && !drag.moved){ sel=drag.nb?"nb:"+drag.nb:null; render(); }
   if(mode==="drag"||mode==="rot"||mode==="dh"||mode==="dbody") save();
   mode=null; drag=null; svg.classList.remove("panning");
 }
@@ -879,9 +899,14 @@ document.getElementById("dTypes").addEventListener("click",e=>{
   }
   fixDrive(); render(); save();
 });
+document.getElementById("nbClose").onclick=()=>{ sel=null; render(); };
 document.getElementById("driveDone").onclick=()=>{ sel=null; render(); };
 document.getElementById("driveHide").onclick=()=>{ state.drive.on=false; sel=null; syncOpts(); render(); save(); };
-document.getElementById("optDrive").addEventListener("change",e=>{ state.drive.on=e.target.checked; if(state.drive.on){ fixDrive(); sel="drive"; } else if(sel==="drive") sel=null; render(); save(); });
+document.getElementById("addDrive").onclick=()=>{
+  if(!state.drive.on) state.drive={...DRIVE_DEFAULT,on:true};
+  fixDrive(); sel="drive"; render(); save();
+  if(window.matchMedia("(max-width:760px)").matches) setSheet(false);
+};
 /* ---------- adding ---------- */
 function addItem(t,extra){
   const T=TYPES[t];
@@ -922,13 +947,11 @@ function bindOpt(id,key,isCheck){
   const el=document.getElementById(id);
   el.addEventListener("change",()=>{state.opts[key]=isCheck?el.checked:+el.value; drawOverlay(); state.items.forEach(snapPos); render(); save();});
 }
-bindOpt("optSnap","snap",true); bindOpt("optBldg","bldg",true); bindOpt("optSight","sight",true); bindOpt("optHalo","halo",false);
+bindOpt("optSnap","snap",true); bindOpt("optBldg","bldg",true); bindOpt("optHalo","halo",false);
 function syncOpts(){
   document.getElementById("optSnap").checked=!!state.opts.snap;
   document.getElementById("optBldg").checked=!!state.opts.bldg;
-  document.getElementById("optSight").checked=!!state.opts.sight;
   document.getElementById("optHalo").value=String(state.opts.halo);
-  document.getElementById("optDrive").checked=!!state.drive.on;
 }
 
 /* ---------- tabs / sheet ---------- */
@@ -971,94 +994,19 @@ function load(obj){
 }
 let saveT=null;
 function save(){ clearTimeout(saveT); saveT=setTimeout(()=>{ try{localStorage.setItem(STORE,JSON.stringify(serialize()));}catch(e){} },250); }
-const enc=o=>"SC2100:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))));
-const dec=s=>{ s=String(s).trim(); const i=s.indexOf("SC2100:"); if(i<0) throw new Error("no code"); return JSON.parse(decodeURIComponent(escape(atob(s.slice(i+7).split(/\s/)[0])))); };
-const codeBox=document.getElementById("codeBox"), codeMsg=document.getElementById("codeMsg");
-const onWeb=(()=>{ try{ return /^https?:$/.test(location.protocol) && !!location.hostname && !/claude|anthropic|localhost|127\.0\.0\.1/i.test(location.hostname); }catch(e){ return false; } })();
-async function copyText(t,okMsg){
-  try{ await navigator.clipboard.writeText(t); codeMsg.textContent=okMsg; }
-  catch(e){ codeBox.value=t; codeBox.focus(); codeBox.select(); codeMsg.textContent="Selected above — copy it from there."; }
-}
-document.getElementById("shareLink").onclick=()=>{
-  const code=enc(serialize());
-  if(!onWeb){ codeBox.value=code; copyText(code,"Share links that carry a layout work on the GitHub version. Copied the layout code instead."); return; }
-  const url=location.origin+location.pathname+"#p="+encodeURIComponent(code.slice(7));
-  codeBox.value=url; copyText(url,"Link copied. Anyone who opens it sees this layout.");
-};
-function loadFromHash(){
-  try{ const h=location.hash||""; if(h.indexOf("#p=")===0){ load(dec("SC2100:"+decodeURIComponent(h.slice(3)))); save(); return true; } }catch(e){}
-  return false;
-}
-if(onWeb) window.addEventListener("hashchange",loadFromHash);
-document.getElementById("copyCode").onclick=async()=>{
-  const c=enc(serialize()); codeBox.value=c;
-  try{ await navigator.clipboard.writeText(c); codeMsg.textContent="Copied. Paste it into a text with the link."; }
-  catch(e){ codeBox.focus(); codeBox.select(); codeMsg.textContent="Code is selected above — copy it from there."; }
-};
-document.getElementById("loadCode").onclick=()=>{
-  try{ load(dec(codeBox.value)); save(); codeMsg.textContent="Layout loaded."; }
-  catch(e){ codeMsg.textContent="That doesn't look like a layout code (it starts with SC2100:)."; }
-};
 let clearArm=false;
 document.getElementById("clearAll").onclick=e=>{
-  if(!clearArm){ clearArm=true; e.target.textContent="Tap again to clear"; setTimeout(()=>{clearArm=false;e.target.textContent="Clear all";},2500); return; }
-  clearArm=false; e.target.textContent="Clear all"; state.items=[]; sel=null; render(); save();
+  if(!clearArm){ clearArm=true; e.target.textContent="Tap again to start over"; setTimeout(()=>{clearArm=false;e.target.textContent="Start over";},2500); return; }
+  clearArm=false; e.target.textContent="Start over";
+  state.items=[{id:nextId++,t:"bus",x:8,y:36,l:32,w:8,r:90,label:""}]; state.drive={...DRIVE_DEFAULT,on:false}; sel=null; render(); save();
 };
-
-/* ---------- shared plans (db) ---------- */
-const planMsg=document.getElementById("planMsg"), planList=document.getElementById("planList");
-let db=null, plans=[];
-function renderPlans(){
-  if(!plans.length){ planList.innerHTML=`<p class="note">No saved plans yet.</p>`; return; }
-  planList.innerHTML=plans.map(p=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid #eceee6;padding:6px 0">
-    <span><b>${esc(p.name)}</b><br><span class="note">${esc(p.summary||"")}${p.updated?" · "+new Date(p.updated).toLocaleDateString():""}</span></span>
-    <span><button class="btn small" data-load="${esc(p.id)}">Load</button></span></div>`).join("");
-}
-planList.addEventListener("click",e=>{
-  const b=e.target.closest("[data-load]"); if(!b) return;
-  const p=plans.find(x=>x.id===b.dataset.load); if(!p) return;
-  try{ load(JSON.parse(p.layout)); save(); planMsg.textContent=`Loaded “${p.name}”.`; }catch(err){ planMsg.textContent="That plan couldn't be read."; }
-});
-document.getElementById("savePlan").onclick=async()=>{
-  const name=(document.getElementById("planName").value||"").trim().slice(0,60);
-  if(!name){ planMsg.textContent="Give the plan a name first."; return; }
-  if(!db){ planMsg.textContent="Shared plans aren't available in this view. Use “Copy layout code” on the Layout tab instead."; return; }
-  const id=(name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"plan").slice(0,60);
-  const bl=state.items.filter(i=>TYPES[i.t].kind==="bus").map(i=>fmt(i.l)+"′");
-  planMsg.textContent="Saving…";
-  try{
-    await db.collection("plans").doc(id).set({name,layout:JSON.stringify(serialize()),summary:`${bl.length} bus${bl.length===1?"":"es"}${bl.length?" ("+bl.join(", ")+")":""}, ${state.items.length} pieces`,updated:Date.now()});
-    planMsg.textContent=`Saved “${name}”.`;
-  }catch(err){
-    planMsg.textContent = err&&err.code==="invalid_argument" ? "You can view plans here but not save them (view-only access). Use “Copy layout code” instead." : "Couldn't save right now — try again, or use “Copy layout code”.";
-  }
-};
-renderPlans();
-(async()=>{
-  try{
-    if(!(window.claude&&window.claude.use)){ throw 0; }
-    db=await window.claude.use("db");
-    if(!db) throw 0;
-    planMsg.textContent="Loading saved plans…";
-    const t=setTimeout(()=>{planMsg.textContent="Saved plans can't be reached yet.";},10000);
-    db.collection("plans").orderBy("updated","desc").limit(50).onSnapshot(snap=>{
-      if(!snap.metadata.fromCache){ clearTimeout(t); if(planMsg.textContent.startsWith("Loading")||planMsg.textContent.startsWith("Saved plans can't")) planMsg.textContent=""; }
-      plans=snap.docs.filter(d=>d.exists).map(d=>{const x=d.data()||{};return {id:d.id,name:String(x.name||d.id),layout:String(x.layout||""),summary:String(x.summary||""),updated:+x.updated||0};});
-      renderPlans();
-    },err=>{ clearTimeout(t); planMsg.textContent="Saved plans aren't available right now."; });
-  }catch(e){
-    db=null;
-    document.getElementById("plansIntro").textContent="Shared saved plans need you to be signed in to Claude. You can still share any layout with “Copy layout code” on the Layout tab.";
-  }
-})();
 
 /* ---------- init ---------- */
 drawBase();
 let loaded=false;
-if(onWeb && loadFromHash()) loaded=true;
-if(!loaded){ try{ const raw=localStorage.getItem(STORE); if(raw){ load(JSON.parse(raw)); loaded=true; } }catch(e){} }
-if(onWeb && !(window.claude&&window.claude.use)){ const tb=document.querySelector('[data-tab="t-plans"]'); if(tb) tb.style.display="none"; }
+try{ const raw=localStorage.getItem(STORE); if(raw){ load(JSON.parse(raw)); loaded=true; } }catch(e){}
 if(!loaded){
+  state.drive={...DRIVE_DEFAULT,on:false};
   state.items=[
     {id:nextId++,t:"bus",x:8,y:36,l:32,w:8,r:90,label:""}
   ];
