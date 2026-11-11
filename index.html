@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2100 St. Claude Ave — Site Planner</title>
+<style>
+:root{
+  --paper:#e9f1fa; --ink:#1d2a38; --muted:#5b6b7c; --line:#d2dceb;
+  --grid1:#d3e1f2; --grid5:#b8cde8; --grid10:#94b2da;
+  --prop:#d1495b; --accent:#2f7f95; --bus:#ffffff; --panel:#fbfdff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
+  font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--line);background:#f4f8fd}
+header h1{font-size:16px;margin:0;letter-spacing:.2px}
+header .sub{color:var(--muted);font-size:12.5px}
+main{flex:1;display:flex;min-height:0}
+#stage{flex:1;position:relative;min-width:0;min-height:0}
+#svg{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#svg.panning{cursor:grabbing}
+aside{width:350px;display:flex;flex-direction:column;border-left:1px solid var(--line);background:var(--panel);min-height:0}
+.quick{display:flex;gap:6px;padding:10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;background:none;padding:10px 4px;font:inherit;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.pbody{overflow:auto;padding:12px 14px 24px;flex:1}
+.tab{display:none}.tab.on{display:block}
+button.btn{font:inherit;border:1px solid #c3cfdf;background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer;color:var(--ink);white-space:nowrap}
+button.btn:hover{background:#f3f4ef}
+button.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+button.btn.bus{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700;flex:1;font-size:15px}
+button.btn.small{padding:5px 8px;font-size:13px}
+button.btn.danger{color:#a12b1f}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 8px}
+h3:first-child{margin-top:2px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+label.chk{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer}
+select,input[type=text],input[type=number],textarea{font:inherit;border:1px solid #c9cdc2;border-radius:7px;padding:6px 8px;background:#fff;color:var(--ink)}
+input[type=number]{width:64px}
+textarea{width:100%;height:70px;font-size:12px;font-family:ui-monospace,Menlo,monospace}
+.stats{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:13px}
+.stats .v{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+.ok{color:#1f7a45}.bad{color:#b23a1f}
+table.code{width:100%;border-collapse:collapse;font-size:13px}
+table.code td{padding:5px 4px;border-bottom:1px solid #eceee6;vertical-align:top}
+table.code td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+.legend{display:grid;grid-template-columns:34px 1fr;gap:6px 8px;align-items:center;font-size:13px}
+.sw{width:30px;height:16px;border-radius:3px}
+.note{font-size:12.5px;color:var(--muted)}
+.callout{background:#fff8e1;border:1px solid #f0d58a;border-radius:8px;padding:8px 10px;font-size:12.5px;margin:10px 0}
+a{color:var(--accent)}
+ul.src{padding-left:18px;font-size:12.5px;margin:6px 0}
+/* overlays on stage */
+#zoomctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
+#zoomctl button{width:40px;height:40px;border-radius:10px;border:1px solid #c9cdc2;background:#fff;font-size:20px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+#zoomctl button.fit{font-size:12px;font-weight:700}
+#selbar{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-height:70%;overflow:auto;background:#fff;border:1px solid #c3cfdf;border-radius:14px;box-shadow:0 6px 20px rgba(30,50,80,.16);padding:10px 12px;display:none;width:min(560px,calc(100% - 130px))}
+#selbar.on{display:block}
+#selbar .t{font-weight:700;font-size:13.5px}
+#selbar .d{font-size:12px;color:var(--muted);margin:2px 0 6px}
+#selbar .row{margin:0}
+#sizeRows{display:none;margin:0 0 7px}
+#sizeRows.on{display:block}
+.chips{display:flex;gap:6px;margin:2px 0 6px;flex-wrap:wrap}
+.chips button{font:inherit;font-size:12.5px;border:1px solid #c3cfdf;background:#fff;border-radius:999px;padding:5px 10px;cursor:pointer;color:var(--ink)}
+.chips button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+#driveRows{display:none;margin:0 0 7px}
+#driveRows.on{display:block}
+.dr{display:flex;align-items:center;gap:8px;margin:2px 0}
+.dr span:first-child{width:62px;font-size:12.5px;color:var(--muted)}
+.dr input[type=range]{flex:1;min-width:120px;accent-color:var(--accent);height:28px}
+.dr b{min-width:38px;text-align:right;font-variant-numeric:tabular-nums}
+#selbar .hide{display:none}
+#warn{position:absolute;left:10px;top:10px;max-width:min(70%,420px);display:flex;flex-direction:column;gap:4px;pointer-events:none}
+#warn div{background:#fff;border:1px solid #e3b0a6;color:#9a2c1a;border-radius:8px;padding:5px 9px;font-size:12.5px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+#warn div.tight{border-color:#efd08a;color:#8a6200}
+#warn div.good{border-color:#a9d3b8;color:#2f7f95}
+body.editing #hint{display:none}
+#hint{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.85);padding:4px 8px;border-radius:7px}
+.collapse{display:none}
+@media (max-width:760px){
+  header{padding:7px 12px}
+  header h1{font-size:15px}
+  header .sub{display:none}
+  main{flex-direction:column}
+  aside{width:auto;border-left:0;border-top:1px solid var(--line);max-height:50dvh;flex:none}
+  aside.min .tabs, aside.min .pbody{display:none}
+  .collapse{display:inline-block}
+  #hint{display:none}
+  #selbar{top:auto;bottom:8px;left:8px;right:8px;transform:none;width:auto;max-width:none;max-height:62%;overflow:auto;border-radius:16px;padding:10px 12px}
+  #warn{top:8px;bottom:auto;max-width:calc(100% - 70px)}
+  #zoomctl{top:8px;bottom:auto}
+  #zoomctl button{width:44px;height:44px}
+  .dr input[type=range]{height:34px}
+  .chips button{padding:7px 12px;font-size:13.5px}
+  button.btn.small{padding:8px 10px}
+  #warn div{font-size:11.5px;padding:4px 7px}
+  aside{max-height:44dvh}
+  #selbar .t{font-size:13.5px}
+  #selbar .d{font-size:11px;margin:1px 0 5px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>2100 St. Claude Ave — Site Planner</h1>
+  <span class="sub">84′ × 56′ corner lot at Frenchmen St · New Orleans (Marigny) · Zoned HMC-2 · 4,704 SF</span>
+</header>
+<main>
+  <div id="stage">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="g1" width="1" height="1" patternUnits="userSpaceOnUse">
+          <path d="M1 0H0V1" fill="none" stroke="#d3e1f2" stroke-width=".04"/>
+        </pattern>
+        <pattern id="g10" width="10" height="10" patternUnits="userSpaceOnUse">
+          <rect width="10" height="10" fill="url(#g1)"/>
+          <path d="M5 0V10M0 5H10" fill="none" stroke="#b8cde8" stroke-width=".07"/>
+          <path d="M10 0H0V10" fill="none" stroke="#94b2da" stroke-width=".12"/>
+        </pattern>
+        <pattern id="g10b" width="10" height="10" patternUnits="userSpaceOnUse">
+          <path d="M10 0H0V10" fill="none" stroke="#94b2da" stroke-width=".12"/>
+        </pattern>
+        <pattern id="hatch" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="2" height="2" fill="#ffffff"/><path d="M0 0V2" stroke="#e3e9f1" stroke-width=".3"/>
+        </pattern>
+        <pattern id="hatchN" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+          <rect width="2.4" height="2.4" fill="#dfe6ef"/><path d="M0 0V2.4" stroke="#cbd5e2" stroke-width=".3"/>
+        </pattern>
+        <pattern id="driveHatch" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <path d="M0 0V1.6" stroke="rgba(64,92,130,.30)" stroke-width=".42"/>
+        </pattern>
+        <pattern id="grass" width="2" height="2" patternUnits="userSpaceOnUse">
+          <rect width="2" height="2" fill="#b9d9a6"/><circle cx=".6" cy=".7" r=".22" fill="#7fb36a"/><circle cx="1.5" cy="1.5" r=".18" fill="#7fb36a"/>
+        </pattern>
+      </defs>
+      <g id="base"></g>
+      <g id="overlay"></g>
+      <g id="drive"></g>
+      <g id="items"></g>
+    </svg>
+    <div id="hint">Tap a piece or the driveway to edit · drag to move · ⟳ handle rotates · pinch/scroll to zoom</div>
+    <div id="selbar">
+      <div class="t" id="selT"></div>
+      <div class="d" id="selD"></div>
+      <div id="driveRows">
+        <div class="chips" id="dTypes">
+          <button data-dtype="stc">U · St. Claude</button>
+          <button data-dtype="fren">U · Frenchmen</button>
+          <button data-dtype="angle">Angled: Frenchmen → St. Claude</button>
+        </div>
+        <div class="dr"><span>Overall</span><input type="range" id="dS" min="14" max="84" step="1"><b id="dSv"></b></div>
+        <div class="dr"><span>Lane</span><input type="range" id="dW" min="6" max="24" step="1"><b id="dWv"></b></div>
+        <div class="dr"><span>Depth</span><input type="range" id="dD" min="5" max="52" step="1"><b id="dDv"></b></div>
+        <div class="dr"><span>Corners</span><input type="range" id="dR" min="0" max="30" step="1"><b id="dRv"></b></div>
+        <div class="dr"><span>In at</span><input type="range" id="dY" min="3" max="53" step="1"><b id="dYv"></b></div>
+        <div class="dr"><span>Out at</span><input type="range" id="dX" min="3" max="81" step="1"><b id="dXv"></b></div>
+        <div class="dr"><span>Angle cut</span><input type="range" id="dC" min="0" max="40" step="1"><b id="dCv"></b></div>
+      </div>
+      <div id="sizeRows">
+        <div class="dr"><span>Length</span><input type="range" id="sL" min="2" max="84" step="1" aria-label="Length in feet"><b id="sLv"></b></div>
+        <div class="dr"><span>Width</span><input type="range" id="sW" min="2" max="56" step="1" aria-label="Width in feet"><b id="sWv"></b></div>
+      </div>
+      <div class="row hide" id="driveBtns">
+        <button class="btn small" id="driveDone">Done</button>
+        <button class="btn small danger" id="driveHide">Hide driveway</button>
+      </div>
+      <div class="row" id="itemBtns">
+        <button class="btn small" data-act="rl" title="Rotate left 15°">⟲ 15°</button>
+        <button class="btn small" data-act="rr" title="Rotate right 15°">⟳ 15°</button>
+        <button class="btn small" data-act="r90" title="Rotate 90°">↻ 90°</button>
+        <button class="btn small" data-act="dup" title="Duplicate">Duplicate</button>
+        <button class="btn small danger" data-act="del" title="Delete">Delete</button>
+      </div>
+    </div>
+    <div id="warn"></div>
+    <div id="zoomctl">
+      <button id="zin" aria-label="Zoom in">+</button>
+      <button id="zout" aria-label="Zoom out">−</button>
+      <button id="zfit" class="fit" aria-label="Fit lot">FIT</button>
+    </div>
+  </div>
+
+  <aside id="panel">
+    <div class="quick">
+      <button class="btn bus" data-add="bus">+ Add bus (32′)</button>
+      <button class="btn collapse" id="toggleSheet" aria-label="Show or hide panel">▾</button>
+    </div>
+    <div class="tabs">
+      <button class="on" data-tab="t-layout">Layout</button>
+      <button data-tab="t-key">Key &amp; Codes</button>
+      <button data-tab="t-plans">Saved Plans</button>
+    </div>
+    <div class="pbody">
+      <!-- LAYOUT -->
+      <section class="tab on" id="t-layout">
+        <h3>Add more pieces</h3>
+        <div class="row">
+          <button class="btn small" data-add="stall">+ Car stall 9×18</button>
+          <button class="btn small" data-add="tent">+ Canopy 10×10</button>
+          <button class="btn small" data-add="green">+ Green space 10×10</button>
+          <button class="btn small" data-add="container20">+ 20′ container</button>
+        </div>
+        <div class="row">
+          <input type="text" id="cLabel" placeholder="Custom label" style="flex:1;min-width:110px">
+          <input type="number" id="cLen" value="12" min="1" max="84" step="0.5" aria-label="Length ft">
+          <span class="note">×</span>
+          <input type="number" id="cWid" value="8" min="1" max="84" step="0.5" aria-label="Width ft">
+          <button class="btn small" id="addCustom">Add</button>
+        </div>
+
+        <h3>View &amp; options</h3>
+        <label class="chk"><input type="checkbox" id="optSnap" checked> Snap to 1-ft grid (rotation in 5° steps)</label>
+        <label class="chk"><input type="checkbox" id="optBldg" checked> Show existing building (and treat it as an obstacle)</label>
+        <label class="chk"><input type="checkbox" id="optDrive"> Driveway <span class="note">(tap it on the map to change type or size)</span></label>
+        <label class="chk"><input type="checkbox" id="optSight"> Show corner clear-view guide (planning aid)</label>
+        <div class="row"><span>Clearance around buses:</span>
+          <select id="optHalo"><option value="0">none</option><option value="3" selected>3 ft</option><option value="5">5 ft</option><option value="10">10 ft</option></select>
+        </div>
+
+        <h3>Site numbers</h3>
+        <div class="stats" id="stats"></div>
+
+        <h3>Share this layout</h3>
+        <p class="note" style="margin-top:0" id="shareIntro">Your layout saves automatically on this device. <b>Copy share link</b> gives you a link that opens with this exact layout. Or copy the layout code and a friend can paste it in below.</p>
+        <div class="row">
+          <button class="btn small primary" id="shareLink">Copy share link</button>
+          <button class="btn small" id="copyCode">Copy layout code</button>
+          <button class="btn small" id="loadCode">Load pasted code</button>
+          <button class="btn small danger" id="clearAll">Clear all</button>
+        </div>
+        <textarea id="codeBox" placeholder="Paste a layout code here, then tap “Load pasted code”."></textarea>
+        <div class="note" id="codeMsg"></div>
+      </section>
+
+      <!-- KEY -->
+      <section class="tab" id="t-key">
+        <h3>Map key</h3>
+        <div class="legend">
+          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="url(#g10)" stroke="#d1495b" stroke-width="2" stroke-dasharray="5 3"/></svg><span><b>Property line</b> — 84′ on St. Claude × 56′ on Frenchmen</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="3" y="3" width="24" height="10" fill="none" stroke="#2f7f95" stroke-width="1.5"/></svg><span><b>Buildable area</b> — HMC-2 requires 0′ setbacks, so it matches the property line</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="#fff" stroke="#6f8196"/></svg><span><b>Existing building</b> — outline from the city's building-footprint layer: a front block plus a rear wing that runs to the 2112 St. Claude wall, ≈1,225 SF under roof (the listing counts 352 SF of enclosed space)</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="2" width="28" height="12" rx="2" fill="#fff" stroke="#4a5868"/></svg><span><b>Bus</b> — starts 32′ × 8′; tap it for length (15–45′) and width sliders; ▶ marks the front. Every piece has length and width sliders.</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="2" y="2" width="26" height="12" rx="3" fill="none" stroke="#5a9bb0" stroke-dasharray="3 2"/></svg><span><b>Clearance ring</b> — your chosen walk-around/egress space</span>
+          <svg class="sw" viewBox="0 0 30 16"><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="#8ea2ba" stroke-width="6.6"/><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="#e3eaf3" stroke-width="6"/><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="url(#driveHatch)" stroke-width="6"/></svg><span><b>Driveway</b> — a U on St. Claude, a U on Frenchmen, or angled (in on Frenchmen, out on St. Claude). Tap it to switch type, use the sliders, or drag its handles.</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="url(#grass)" stroke="#4f8a3c"/></svg><span><b>Green space</b> — counts toward the 15% permeable minimum</span>
+          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="2" width="28" height="12" rx="2" fill="#fff" stroke="#d1495b" stroke-width="2.5"/></svg><span><b>Red outline</b> — piece crosses a property line or overlaps something</span>
+          <svg class="sw" viewBox="0 0 30 16"><path d="M1 1H29L1 15Z" fill="rgba(52,120,200,.18)" stroke="#3478c8" stroke-dasharray="3 2"/></svg><span><b>Corner clear-view guide</b> — 15′ planning triangle, not a CZO number</span>
+        </div>
+
+        <h3>HMC-2 zoning (CZO Table 10-2)</h3>
+        <table class="code">
+          <tr><td>Front yard setback</td><td>None (0′)</td></tr>
+          <tr><td>Interior side yard</td><td>None (0′)</td></tr>
+          <tr><td>Corner side yard</td><td>None (0′)</td></tr>
+          <tr><td>Rear yard</td><td>None (0′)</td></tr>
+          <tr><td>Maximum building height</td><td>50′</td></tr>
+          <tr><td>Maximum FAR</td><td>2.2 ≈ 10,349 SF</td></tr>
+          <tr><td>Non-residential use over 10,000 SF</td><td>Conditional use</td></tr>
+          <tr><td>Min. permeable open space</td><td>15% ≈ 706 SF</td></tr>
+          <tr><td>Open space ratio (residential / mixed-use)</td><td>0.30 ≈ 1,411 SF</td></tr>
+          <tr><td>Min. lot area per unit (4+ units)</td><td>600 SF/unit</td></tr>
+          <tr><td>Parking lot as the <i>main</i> use</td><td>Conditional use</td></tr>
+          <tr><td>Parking lot accessory to another use</td><td>Permitted*</td></tr>
+          <tr><td>Parking structure</td><td>Permitted</td></tr>
+        </table>
+        <p class="note">*Per the CZO use table footnote (Sec. 22.8.B.2.a). All required open space must be permeable.</p>
+
+        <h3>Other reviews to expect</h3>
+        <div class="callout"><b>Historic review (HDLC):</b> the city's GIS puts this lot in the <i>Faubourg Marigny</i> local historic district, <b>Full Control</b>. New construction, demolition and exterior changes need HDLC approval.</div>
+        <div class="callout"><b>Curb cuts:</b> every driveway option needs two new curb cuts across the sidewalk. New or widened curb cuts need city permits, and with the HDLC and the EC design overlay on this lot, expect them to be reviewed too.</div>
+        <div class="callout"><b>Buses on site:</b> zoning above covers buildings and land use. Using buses as lodging, a bar, food vending or storage is permitted separately — check with Safety &amp; Permits before you bid. The CZO also requires most activity on a lot to be indoors, with listed exceptions (Sec. 21.5).</div>
+        <div class="callout"><b>Overlays on this parcel (city GIS):</b> RDO-1 Residential Diversity Overlay · EC Enhancement Corridor Design Overlay (design review) · Transient Lodging Interim Zoning District · Data Center Interim Zoning District.</div>
+        <div class="callout"><b>Behind &amp; beside:</b> no alley. The rear line is shared with 1031 Frenchmen St. (Sq. 374 Lot 21, 28′ × 112′, a double), which runs behind both this lot and 2112 St. Claude. The east side line is shared with 2112 St. Claude (28′ × 56′, a bar building). Both are also zoned HMC-2. Easements or servitudes don't show on city maps, so ask for the title work and a survey.</div>
+
+        <h3>Property facts</h3>
+        <table class="code">
+          <tr><td>Legal description</td><td>Sq. 374, Lot N-1</td></tr>
+          <tr><td>Parcel (APN)</td><td>37W102207</td></tr>
+          <tr><td>Existing structure</td><td>352 SF, former tire shop</td></tr>
+          <tr><td>Auction (SVN Gilmore, online)</td><td>Dec 1 – Dec 8, 4 PM CST</td></tr>
+          <tr><td>Starting bid</td><td>$100,000</td></tr>
+          <tr><td>Buyer's premium / deposit</td><td>10% / 10% in 48 hrs</td></tr>
+          <tr><td>Terms</td><td>Cash, as-is, with reserve</td></tr>
+        </table>
+        <p class="note">This is not a survey. The lot size comes from the assessor's record (84′ × 56′); the city's GIS parcel outline draws it a bit bigger (about 89′ × 58′). The building outline is the city's building footprint (traced from aerial imagery), checked against the aerial photo. Street widths are approximate. Get a current survey before you commit to a layout.</p>
+
+        <h3>Sources</h3>
+        <ul class="src">
+          <li><a href="https://czo.nola.gov/article-10/" target="_blank" rel="noopener">New Orleans CZO, Article 10 (HMC-2)</a></li>
+          <li><a href="https://www.svngilmoreauction.com/auctions/detail/bw172209" target="_blank" rel="noopener">SVN Gilmore auction listing</a></li>
+          <li><a href="https://www.mceneryco.com/wp-content/uploads/2025/01/2100-St-Claude-Ave.pdf" target="_blank" rel="noopener">McEnery offering memorandum</a></li>
+          <li><a href="https://c21ccgroup.c21.com/property/2100-st-claude-avenue-new-orleans-la-70116-REN035948413" target="_blank" rel="noopener">MLS listing (legal description)</a></li>
+          <li><a href="https://sites.google.com/view/no-arc-121923/2242-saint-claude-ave" target="_blank" rel="noopener">HDLC review, 2242 St. Claude (district)</a></li>
+          <li><a href="https://gis.nola.gov/arcgis/rest/services/LandBase/Parcels/MapServer/0" target="_blank" rel="noopener">City of New Orleans GIS — parcels, zoning, historic district, overlays</a></li>
+          <li><a href="https://maps.nola.gov/server/rest/services/Basemap/BuildingFootprints/MapServer/0" target="_blank" rel="noopener">City of New Orleans GIS — building footprints</a></li>
+        </ul>
+      </section>
+
+      <!-- PLANS -->
+      <section class="tab" id="t-plans">
+        <h3>Saved plans</h3>
+        <p class="note" style="margin-top:0" id="plansIntro">Name a layout and save it so anyone with the link who's signed in to Claude can load it.</p>
+        <div class="row">
+          <input type="text" id="planName" placeholder="e.g. Two buses on St. Claude" style="flex:1;min-width:150px" maxlength="60">
+          <button class="btn small primary" id="savePlan">Save plan</button>
+        </div>
+        <div class="note" id="planMsg"></div>
+        <div id="planList" style="margin-top:8px"></div>
+      </section>
+    </div>
+  </aside>
+</main>
+
+<script>
+(function(){
+"use strict";
+const LOT_W=84, LOT_H=56, LOT_AREA=LOT_W*LOT_H;
+// Existing building: City of New Orleans building-footprint layer (traced from aerial imagery),
+// converted to lot coordinates (x = ft from the Frenchmen line, y = ft back from the St. Claude line).
+const BLDG_POLY=[[38.2,22.4],[57.5,23.0],[57.3,34.2],[72.6,34.2],[72.9,34.9],[84,34.9],[84,56],[58.3,56],[58.6,52.2],[35.4,52],[35.7,43.6],[28.4,43.1],[28.7,35.7],[35.6,35.8],[35.4,39],[37.6,39.2]];
+const BLDG_PARTS=[[[38.2,22.4],[57.5,22.4],[57.5,34.6],[38.2,34.6]],[[35.4,34.2],[58.6,34.2],[58.6,52.1],[35.4,52.1]],[[57.3,34.4],[84,34.4],[84,56],[57.3,56]],[[28.4,35.7],[35.7,35.7],[35.7,43.6],[28.4,43.6]]];
+const BLDG_AREA=(()=>{let a=0;for(let i=0;i<BLDG_POLY.length;i++){const p=BLDG_POLY[i],q=BLDG_POLY[(i+1)%BLDG_POLY.length];a+=p[0]*q[1]-q[0]*p[1];}return Math.abs(a)/2;})();
+function hitsBldg(P){return BLDG_PARTS.some(q=>overlap(P,q));}
+const TYPES={
+  bus:{name:"Bus",l:32,w:8,kind:"bus"},
+  stall:{name:"Car stall",l:18,w:9,kind:"stall"},
+  tent:{name:"Canopy",l:10,w:10,kind:"tent"},
+  green:{name:"Green space",l:10,w:10,kind:"green"},
+  container20:{name:"20′ container",l:20,w:8,kind:"box"},
+  custom:{name:"Custom",l:12,w:8,kind:"box"}
+};
+const STORE="stclaude2100-plan-v2";
+const svg=document.getElementById("svg");
+const gBase=document.getElementById("base"), gOver=document.getElementById("overlay"), gItems=document.getElementById("items");
+const NS="http://www.w3.org/2000/svg";
+
+const DRIVE_DEFAULT={on:true,type:"u",side:"stc",xl:9,xr:75,d:11,w:12,r:8,yF:28,xS:22,c:12};
+let state={items:[],opts:{snap:true,bldg:true,sight:false,halo:3},drive:{...DRIVE_DEFAULT}};
+const gDrive=document.getElementById("drive");
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+function sideInfo(){
+  return state.drive.side==="fren"
+    ? {alongMax:LOT_H,depthMax:LOT_W,edge:-8,walk:-4,M:(a,b)=>[b,a]}
+    : {alongMax:LOT_W,depthMax:LOT_H,edge:-10,walk:-5,M:(a,b)=>[a,b]};
+}
+function fixDrive(){
+  const D=state.drive;
+  D.w=clamp(Math.round(D.w),6,24);
+  if(D.type==="angle"){
+    const h=D.w/2;
+    D.yF=clamp(D.yF,h,LOT_H-h); D.xS=clamp(D.xS,h,LOT_W-h);
+    D.c=clamp(D.c,0,Math.min(D.xS,D.yF));
+  } else {
+    const S=sideInfo();
+    D.xl=clamp(D.xl,D.w/2,S.alongMax-D.w/2-D.w-2);
+    D.xr=clamp(D.xr,D.xl+D.w+2,S.alongMax-D.w/2);
+    D.d=clamp(D.d,D.w/2+1,S.depthMax-D.w/2);
+    D.r=clamp(D.r,0,Math.min((D.xr-D.xl)/2,D.d));
+  }
+}
+function driveGeom(){
+  const D=state.drive, h=D.w/2, w=D.w;
+  const rect=(x0,y0,x1,y1)=>[[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
+  if(D.type==="angle"){
+    const {yF,xS,c}=D;
+    const path=`M-8 ${yF}H${xS-c}L${xS} ${yF-c}V-10`;
+    const polys=[rect(0,yF-h,xS+h,yF+h),rect(xS-h,0,xS+h,yF+h)];
+    const area=w*(xS+h)+w*(yF+h)-w*w;
+    const cx=Math.max(2.5,Math.min(xS-c-3,(xS-c)/2)), cy=Math.max(2.5,Math.min(yF-c-3,(yF-c)/2));
+    const chev=[[[cx-.9,yF-1.6],[cx+.9,yF],[cx-.9,yF+1.6]],[[xS-1.6,cy+.9],[xS,cy-.9],[xS+1.6,cy+.9]]];
+    const handles=[{x:-4,y:yF,key:"yF",g:"↕",cur:"ns-resize"},{x:xS,y:-5,key:"xS",g:"↔",cur:"ew-resize"},{x:xS-c/2,y:yF-c/2,key:"c",g:"⤡",cur:"nwse-resize"}];
+    const labels=[{x:-9.4,y:yF,rot:-90,t:`IN · ${fmt(w)}′ cut`},{x:xS,y:-11.2,t:`OUT · ${fmt(w)}′ cut`}];
+    return {path,polys,area,chev,handles,labels,join:"miter"};
+  }
+  const S=sideInfo(), M=S.M, {xl,xr,d,r}=D, e=S.edge, fr=D.side==="fren";
+  const pt=(a,b)=>M(a,b).join(" ");
+  const path=`M${pt(xl,e)}L${pt(xl,d-r)}Q${pt(xl,d)} ${pt(xl+r,d)}L${pt(xr-r,d)}Q${pt(xr,d)} ${pt(xr,d-r)}L${pt(xr,e)}`;
+  const R2=(a0,b0,a1,b1)=>{const p=M(a0,b0),q=M(a1,b1);return rect(Math.min(p[0],q[0]),Math.min(p[1],q[1]),Math.max(p[0],q[0]),Math.max(p[1],q[1]));};
+  const polys=[R2(xl-h,0,xl+h,d+h),R2(xr-h,0,xr+h,d+h),R2(xl,d-h,xr,d+h)];
+  const area=2*w*(d-h)+(xr-xl+w)*w;
+  const ly=Math.max(2.2,Math.min(d-r-1.5,d/2)), mx=(xl+xr)/2;
+  const ch=pts=>pts.map(([a,b])=>M(a,b));
+  const chev=[ch([[xl-1.6,ly-.9],[xl,ly+.9],[xl+1.6,ly-.9]]),ch([[xr-1.6,ly+.9],[xr,ly-.9],[xr+1.6,ly+.9]]),ch([[mx-1,d-1.4],[mx+1,d],[mx-1,d+1.4]])];
+  const H=(a,b,key,g,cur)=>{const [x,y]=M(a,b);return {x,y,key,g,cur};};
+  const handles=[H(xl,S.walk,"xl",fr?"↕":"↔",fr?"ns-resize":"ew-resize"),H(xr,S.walk,"xr",fr?"↕":"↔",fr?"ns-resize":"ew-resize"),H(mx,d,"d",fr?"↔":"↕",fr?"ew-resize":"ns-resize")];
+  const L=(a,t)=>{const [x,y]=M(a,e-1.2);return fr?{x:x-.2,y,rot:-90,t}:{x,y,t};};
+  const labels=[L(xl,`IN · ${fmt(w)}′ cut`),L(xr,`OUT · ${fmt(w)}′ cut`)];
+  return {path,polys,area,chev,handles,labels,join:"round"};
+}
+function drivePolys(){ return state.drive.on?driveGeom().polys:[]; }
+function driveArea(){ return state.drive.on?driveGeom().area:0; }
+function hr(){ const px=svg.clientWidth||800; return Math.max(1.4,13*view.w/px); }
+let rq=false; function reqRender(){ if(rq) return; rq=true; requestAnimationFrame(()=>{rq=false; render();}); }
+let nextId=1, sel=null;
+let view={x:0,y:0,w:100,h:100};
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>(Math.round(n*10)/10).toLocaleString(undefined,{maximumFractionDigits:1});
+const r1=n=>Math.round(n*10)/10;
+
+/* ---------- base drawing ---------- */
+function drawBase(){
+  const s=[];
+  // graph paper everywhere
+  s.push(`<rect x="-300" y="-300" width="700" height="600" fill="#e9f1fa"/>`);
+  s.push(`<rect x="-300" y="-300" width="700" height="600" fill="url(#g10b)" opacity=".55"/>`);
+  // St. Claude Ave (north). Sidewalk 0..-10, road -10..-58, far sidewalk -58..-68
+  s.push(`<rect x="-300" y="-10" width="700" height="10" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-300" y="-58" width="700" height="48" fill="#66727f"/>`);
+  s.push(`<rect x="-300" y="-68" width="700" height="10" fill="#dbe3ee"/>`);
+  // Frenchmen St (west). sidewalk -8..0, road -36..-8, far sidewalk -44..-36
+  s.push(`<rect x="-8" y="0" width="8" height="300" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-36" y="-58" width="28" height="358" fill="#66727f"/>`);
+  s.push(`<rect x="-44" y="0" width="8" height="300" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-44" y="-68" width="8" height="10" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-8" y="-68" width="8" height="10" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-8" y="-10" width="8" height="10" fill="#dbe3ee"/>`);
+  s.push(`<rect x="-44" y="-10" width="8" height="10" fill="#dbe3ee"/>`);
+  // lane marks St Claude (outside the intersection)
+  const laneSeg=(y,col,dash)=>`<path d="M-300 ${y}H-36M-8 ${y}H400" stroke="${col}" stroke-width=".35" ${dash?'stroke-dasharray="3 4"':''}/>`;
+  s.push(laneSeg(-22,"#f4f1e6",true)); s.push(laneSeg(-46,"#f4f1e6",true));
+  s.push(`<path d="M-300 -33.6H-36M-8 -33.6H400M-300 -34.4H-36M-8 -34.4H400" stroke="#e8c33a" stroke-width=".3"/>`);
+  s.push(`<path d="M-22 0V300M-22 -68V-300" stroke="#f4f1e6" stroke-width=".3" stroke-dasharray="3 4"/>`);
+  // crosswalks
+  let cw="";
+  for(let x=-35;x<-8;x+=2) cw+=`<rect x="${x}" y="-9" width="1" height="7" fill="#eceae2" opacity=".85"/>`;
+  for(let y=-57;y<-10;y+=2) cw+=`<rect x="-7" y="${y}" width="6" height="1" fill="#eceae2" opacity=".85" transform="translate(-1 0)"/>`;
+  s.push(cw);
+  // street names
+  s.push(`<text x="42" y="-15.2" font-size="3.2" font-weight="700" fill="#f4f1e6" text-anchor="middle" letter-spacing=".6">ST. CLAUDE AVENUE</text>`);
+  s.push(`<text x="42" y="-27" font-size="1.7" fill="#cfd3d8" text-anchor="middle">street width approximate</text>`);
+  s.push(`<text x="0" y="0" font-size="3" font-weight="700" fill="#f4f1e6" text-anchor="middle" letter-spacing=".6" transform="translate(-16.6 30) rotate(-90)">FRENCHMEN ST.</text>`);
+  // neighbors
+  // 2112 St. Claude: 28' x 56' lot, building covers most of it
+  s.push(`<rect x="84" y="0" width="28" height="56" fill="#e2e9f2" stroke="#a7b4c5" stroke-width=".25" stroke-dasharray="1.2 .8"/>`);
+  s.push(`<rect x="84.3" y="1" width="20" height="44" fill="url(#hatchN)" stroke="#b3c0cf" stroke-width=".2"/>`);
+  s.push(`<text x="98" y="24" font-size="1.9" fill="#5f6d7d" text-anchor="middle">2112 St. Claude</text><text x="98" y="26.6" font-size="1.6" fill="#5f6d7d" text-anchor="middle">28′×56′ lot · bar bldg</text>`);
+  // 1031 Frenchmen: 28' x 112' lot behind both St. Claude lots
+  s.push(`<rect x="0" y="56" width="112" height="28" fill="#e2e9f2" stroke="#a7b4c5" stroke-width=".25" stroke-dasharray="1.2 .8"/>`);
+  s.push(`<rect x="0.3" y="59.5" width="62" height="19" fill="url(#hatchN)" stroke="#b3c0cf" stroke-width=".2"/>`);
+  s.push(`<text x="31" y="68.6" font-size="1.9" fill="#5f6d7d" text-anchor="middle">1031 Frenchmen St. (house)</text>`);
+  s.push(`<text x="31" y="71.3" font-size="1.6" fill="#5f6d7d" text-anchor="middle">28′ × 112′ lot runs behind both St. Claude lots</text>`);
+  s.push(`<text x="${LOT_W/2+16}" y="58.4" font-size="1.45" fill="#8a4b3c" text-anchor="middle" font-style="italic">shared rear lot line — no alley in this square</text>`);
+  // lot
+  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="#f6f9fd"/>`);
+  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="url(#g10)"/>`);
+  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#2f7f95" stroke-width=".25" opacity=".9"/>`);
+  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#d1495b" stroke-width=".55" stroke-dasharray="2.2 1.1"/>`);
+  // corner pins
+  [[0,0],[LOT_W,0],[LOT_W,LOT_H],[0,LOT_H]].forEach(([x,y])=>s.push(`<circle cx="${x}" cy="${y}" r=".7" fill="#fff" stroke="#d1495b" stroke-width=".35"/>`));
+  // ticks/labels every 10 ft
+  for(let x=0;x<=LOT_W;x+=10){s.push(`<text x="${x}" y="-1.2" font-size="1.5" fill="#3b4a40" text-anchor="middle">${x}′</text>`);}
+  s.push(`<text x="${LOT_W}" y="-3.2" font-size="1.5" fill="#3b4a40" text-anchor="middle">84′</text>`);
+  for(let y=10;y<=LOT_H;y+=10){s.push(`<text x="-1.2" y="${y+.5}" font-size="1.5" fill="#3b4a40" text-anchor="end">${y}′</text>`);}
+  s.push(`<text x="-1.2" y="${LOT_H+.5}" font-size="1.5" fill="#3b4a40" text-anchor="end">56′</text>`);
+  // dimension strings
+  s.push(`<g fill="#d1495b" font-weight="700"><text x="${LOT_W/2}" y="-5.6" font-size="2.2" text-anchor="middle">84′-0″ property line along St. Claude</text></g>`);
+  s.push(`<text x="0" y="0" font-size="2.2" font-weight="700" fill="#d1495b" text-anchor="middle" transform="translate(-4.4 ${LOT_H/2}) rotate(-90)">56′-0″ along Frenchmen</text>`);
+  s.push(`<text x="${LOT_W/2}" y="${LOT_H-1.4}" font-size="1.6" fill="#2f7f95" text-anchor="middle" opacity=".9">HMC-2 · 0′ setbacks · buildable area = property line · 4,704 SF</text>`);
+  // north arrow + scale
+  s.push(`<g transform="translate(96 -2)"><circle r="3.4" fill="#fff" stroke="#3b4a40" stroke-width=".2"/><path d="M0 -2.8L1.3 1.6L0 .8L-1.3 1.6Z" fill="#1f2a24"/><text y="-4.2" font-size="1.8" font-weight="700" text-anchor="middle" fill="#1f2a24">N</text></g>`);
+  s.push(`<g transform="translate(70 88)"><rect width="10" height="1" fill="#1f2a24"/><rect x="10" width="10" height="1" fill="#fff" stroke="#1f2a24" stroke-width=".15"/><text x="0" y="3" font-size="1.5" text-anchor="middle">0</text><text x="10" y="3" font-size="1.5" text-anchor="middle">10</text><text x="20" y="3" font-size="1.5" text-anchor="middle">20 ft</text></g>`);
+  gBase.innerHTML=s.join("");
+}
+
+function drawOverlay(){
+  const s=[];
+  if(state.opts.sight){
+    s.push(`<path d="M0 0H15L0 15Z" fill="rgba(52,120,200,.16)" stroke="#3478c8" stroke-width=".25" stroke-dasharray="1 .7"/>`);
+    s.push(`<text x="4.2" y="4.6" font-size="1.3" fill="#215a99">clear view</text>`);
+  }
+  if(state.opts.bldg){
+    const pts=BLDG_POLY.map(p=>p.join(",")).join(" ");
+    s.push(`<polygon points="${pts}" transform="translate(.5 .6)" fill="rgba(60,90,130,.13)"/>`);
+    s.push(`<polygon points="${pts}" fill="#ffffff" stroke="#6f8196" stroke-width=".3" stroke-linejoin="round"/>`);
+    s.push(`<text x="47.8" y="28" font-size="1.7" font-weight="700" fill="#3c4b5c" text-anchor="middle">EXISTING</text>`);
+    s.push(`<text x="47.8" y="30.2" font-size="1.7" font-weight="700" fill="#3c4b5c" text-anchor="middle">BUILDING</text>`);
+    s.push(`<text x="58" y="44.6" font-size="1.2" fill="#55667a" text-anchor="middle">≈${Math.round(BLDG_AREA).toLocaleString()} SF roofed</text>`);
+    s.push(`<text x="58" y="46.3" font-size="1.05" fill="#7a8a9c" text-anchor="middle">city building footprint</text>`);
+  }
+  gOver.innerHTML=s.join("");
+}
+
+/* ---------- geometry ---------- */
+function corners(it,pad){
+  pad=pad||0;
+  const a=it.r*Math.PI/180, c=Math.cos(a), s=Math.sin(a);
+  const hl=it.l/2+pad, hw=it.w/2+pad;
+  return [[-hl,-hw],[hl,-hw],[hl,hw],[-hl,hw]].map(([x,y])=>[it.x+x*c-y*s,it.y+x*s+y*c]);
+}
+function overlap(P,Q){
+  const polys=[P,Q];
+  for(const poly of polys){
+    for(let i=0;i<poly.length;i++){
+      const p1=poly[i],p2=poly[(i+1)%poly.length];
+      const nx=p2[1]-p1[1], ny=p1[0]-p2[0];
+      const len=Math.hypot(nx,ny)||1;
+      let a1=Infinity,a2=-Infinity,b1=Infinity,b2=-Infinity;
+      for(const p of P){const d=(p[0]*nx+p[1]*ny)/len;a1=Math.min(a1,d);a2=Math.max(a2,d);}
+      for(const p of Q){const d=(p[0]*nx+p[1]*ny)/len;b1=Math.min(b1,d);b2=Math.max(b2,d);}
+      if(a2<=b1+0.02||b2<=a1+0.02) return false;
+    }
+  }
+  return true;
+}
+function halfExtents(it){
+  const a=it.r*Math.PI/180, c=Math.abs(Math.cos(a)), s=Math.abs(Math.sin(a));
+  return [ (it.l*c+it.w*s)/2, (it.l*s+it.w*c)/2 ];
+}
+function snapPos(it){
+  if(!state.opts.snap) {it.x=r1(it.x);it.y=r1(it.y);return;}
+  const [hx,hy]=halfExtents(it);
+  it.x=Math.round(it.x-hx)+hx; it.y=Math.round(it.y-hy)+hy;
+}
+function analyze(){
+  const res={}; res.pairs=[]; res.onDrive=[];
+  const dp=drivePolys();
+  res.driveHitsBldg=!!(state.opts.bldg && dp.some(q=>hitsBldg(q)));
+  const halo=+state.opts.halo||0;
+  const bp=!!state.opts.bldg;
+  state.items.forEach(it=>{res[it.id]={out:false,hit:[],tight:[]};});
+  state.items.forEach((it,i)=>{
+    const P=corners(it), R=res[it.id];
+    const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+    R.minX=Math.min(...xs);R.maxX=Math.max(...xs);R.minY=Math.min(...ys);R.maxY=Math.max(...ys);
+    R.out = R.minX<-0.01||R.minY<-0.01||R.maxX>LOT_W+0.01||R.maxY>LOT_H+0.01;
+    if(bp && hitsBldg(P)) R.hit.push("existing building");
+    if(dp.some(q=>overlap(P,q))) res.onDrive.push(label(it));
+    const isBus=TYPES[it.t].kind==="bus";
+    if(isBus && halo>0 && bp && !R.hit.length && hitsBldg(corners(it,halo))){ R.tight.push("existing building"); res.pairs.push([label(it),"the existing building"]); }
+    state.items.forEach((o,j)=>{
+      if(j<=i) return;
+      const Q=corners(o);
+      if(overlap(P,Q)){R.hit.push(label(o));res[o.id].hit.push(label(it));return;}
+      const oBus=TYPES[o.t].kind==="bus";
+      if(halo>0 && (isBus&&overlap(corners(it,halo),Q) || oBus&&overlap(corners(o,halo),P))){
+        R.tight.push(label(o)); res[o.id].tight.push(label(it)); res.pairs.push([label(it),label(o)]);
+      }
+    });
+  });
+  return res;
+}
+function label(it){return it.label||(TYPES[it.t].kind==="bus"?`${fmt(it.l)}′ Bus`:TYPES[it.t].name);}
+
+/* ---------- item drawing ---------- */
+function itemSVG(it,R){
+  const T=TYPES[it.t], L=it.l, W=it.w, hl=L/2, hw=W/2;
+  const bad=R.out||R.hit.length;
+  const isSel=sel===it.id;
+  const flip=(((it.r%360)+360)%360)>90 && (((it.r%360)+360)%360)<270;
+  const txtT=flip?' transform="rotate(180)"':'';
+  const halo=+state.opts.halo||0;
+  let g=`<g data-id="${it.id}" transform="translate(${it.x} ${it.y}) rotate(${it.r})" style="cursor:move">`;
+  if(T.kind==="bus" && halo>0){
+    g+=`<rect x="${-hl-halo}" y="${-hw-halo}" width="${L+2*halo}" height="${W+2*halo}" rx="${Math.min(halo,3)}" fill="rgba(47,127,149,.07)" stroke="${R.tight.length?'#d08a00':'#5a9bb0'}" stroke-width="${R.tight.length?.3:.18}" stroke-dasharray="1 .6"/>`;
+  }
+  const stroke=bad?"#d1495b":(isSel?"#2f7f95":"#4a5868");
+  const sw=bad?.55:(isSel?.45:.2);
+  if(T.kind==="bus"){
+    g+=`<rect x="${-hl+2.2}" y="${-hw-.35}" width="2" height=".5" fill="#222"/><rect x="${-hl+2.2}" y="${hw-.15}" width="2" height=".5" fill="#222"/>`;
+    g+=`<rect x="${hl-(L>30?7:5.5)}" y="${-hw-.35}" width="2" height=".5" fill="#222"/><rect x="${hl-(L>30?7:5.5)}" y="${hw-.15}" width="2" height=".5" fill="#222"/>`;
+    if(L>30) g+=`<rect x="${-hl+5}" y="${-hw-.35}" width="2" height=".5" fill="#222"/><rect x="${-hl+5}" y="${hw-.15}" width="2" height=".5" fill="#222"/>`;
+    g+=`<rect x="${-hl+.4}" y="${-hw+.5}" width="${L}" height="${W}" rx="1" fill="rgba(40,70,110,.16)"/>`;
+    g+=`<rect x="${-hl}" y="${-hw}" width="${L}" height="${W}" rx="1" fill="#ffffff" stroke="${stroke}" stroke-width="${Math.max(sw,.28)}"/>`;
+    g+=`<rect x="${-hl+.8}" y="${-hw+.9}" width="${L-3.2}" height="${W-1.8}" rx=".5" fill="#f4f7fb" stroke="#d5dde8" stroke-width=".12"/>`;
+    // roof hatches
+    g+=`<rect x="${-hl+L*.14-1}" y="-1" width="2" height="2" fill="#e6ecf3" stroke="#b9c5d4" stroke-width=".1"/>`;
+    g+=`<rect x="${-hl+L*.78-1}" y="-1" width="2" height="2" fill="#e6ecf3" stroke="#b9c5d4" stroke-width=".1"/>`;
+    // windshield / hood at front (+x)
+    g+=`<rect x="${hl-2.3}" y="${-hw+.6}" width="1.1" height="${W-1.2}" rx=".3" fill="#2d3e50"/>`;
+    g+=`<path d="M${hl-.6} -1.1L${hl+1.3} 0L${hl-.6} 1.1Z" fill="#2f7f95"/>`;
+    g+=`<text x="${-1}" y=".7" font-size="${L>30?2.2:1.9}" font-weight="800" fill="#2b3a4b" text-anchor="middle"${txtT}>${esc(label(it).toUpperCase())}</text>`;
+  } else if(T.kind==="green"){
+    g+=`<rect x="${-hl}" y="${-hw}" width="${L}" height="${W}" fill="url(#grass)" stroke="${bad?'#d1495b':(isSel?'#2f7f95':'#4f8a3c')}" stroke-width="${bad?.55:(isSel?.45:.2)}"/>`;
+    g+=`<g${txtT}><text y="-.3" font-size="1.3" font-weight="700" fill="#2d5a22" text-anchor="middle">${esc(label(it))}</text><text y="1.4" font-size="1.2" fill="#2d5a22" text-anchor="middle">${fmt(L*W)} SF</text></g>`;
+  } else if(T.kind==="stall"){
+    g+=`<rect x="${-hl}" y="${-hw}" width="${L}" height="${W}" fill="rgba(255,255,255,.55)" stroke="${stroke}" stroke-width="${sw}"/>`;
+    g+=`<rect x="${-hl+2}" y="${-hw+1.3}" width="${L-4}" height="${W-2.6}" rx="1.4" fill="#9aa5b1" stroke="#5c6670" stroke-width=".15"/>`;
+    g+=`<text y=".5" font-size="1.4" font-weight="700" fill="#24303a" text-anchor="middle"${txtT}>${esc(label(it))}</text>`;
+  } else if(T.kind==="tent"){
+    g+=`<rect x="${-hl}" y="${-hw}" width="${L}" height="${W}" fill="#f4d3c7" stroke="${stroke}" stroke-width="${sw}"/>`;
+    g+=`<path d="M${-hl} ${-hw}L${hl} ${hw}M${hl} ${-hw}L${-hl} ${hw}" stroke="#d08d76" stroke-width=".15"/>`;
+    g+=`<text y=".5" font-size="1.4" font-weight="700" fill="#7a3a24" text-anchor="middle"${txtT}>${esc(label(it))}</text>`;
+  } else {
+    g+=`<rect x="${-hl}" y="${-hw}" width="${L}" height="${W}" rx=".3" fill="#b9c7d6" stroke="${stroke}" stroke-width="${sw}"/>`;
+    for(let x=-hl+1;x<hl-0.5;x+=1) g+=`<path d="M${x} ${-hw+.2}V${hw-.2}" stroke="#97a8ba" stroke-width=".1"/>`;
+    g+=`<text y=".5" font-size="1.5" font-weight="700" fill="#1e2d3d" text-anchor="middle"${txtT}>${esc(label(it))}</text>`;
+  }
+  if(isSel){
+    const rr=hr(), hx=hl+rr+1.6;
+    g+=`<path d="M${hl} 0H${hx}" stroke="#2f7f95" stroke-width=".2"/>`;
+    g+=`<circle data-rot="${it.id}" cx="${hx}" cy="0" r="${rr}" fill="#fff" stroke="#2f7f95" stroke-width="${rr*.2}" style="cursor:crosshair"/>`;
+    g+=`<text x="${hx}" y="${rr*.35}" font-size="${rr*1.05}" font-weight="700" fill="#2f7f95" text-anchor="middle" pointer-events="none">⟳</text>`;
+  }
+  return g+`</g>`;
+}
+
+function drawDrive(R){
+  const D=state.drive;
+  if(!D.on){ gDrive.innerHTML=""; return; }
+  const G=driveGeom(), w=D.w, path=G.path, J=G.join;
+  const isSel=sel==="drive", bad=R.driveHitsBldg;
+  const st=(stroke,sw,extra)=>`<path d="${path}" fill="none" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="${J}" stroke-miterlimit="10" ${extra||""}/>`;
+  let g="";
+  g+=`<mask id="dmask" maskUnits="userSpaceOnUse" x="-60" y="-60" width="220" height="200"><rect x="-60" y="-60" width="220" height="200" fill="#fff"/>${st("#000",w)}</mask>`;
+  g+=st(bad?'#d1495b':(isSel?'#2f7f95':'#8ea2ba'),w+(isSel||bad?.8:.4),`mask="url(#dmask)" opacity="${isSel||bad?.95:.6}"`);
+  if(isSel) g+=st("rgba(47,127,149,.08)",w);
+  g+=st("rgba(246,249,253,.55)",w)+st("rgba(110,138,172,.18)",w)+st("url(#driveHatch)",w);
+  G.chev.forEach(pts=>{ g+=`<path d="M${pts.map(p=>p.join(" ")).join("L")}" fill="none" stroke="#5d7795" stroke-width=".38" stroke-linecap="round" stroke-linejoin="round" opacity=".75" pointer-events="none"/>`; });
+  if(!isSel) G.labels.forEach(l=>{ g+=`<text x="${l.x}" y="${l.y}" font-size="1.5" font-weight="700" fill="#e9f1fa" text-anchor="middle"${l.rot?` transform="rotate(${l.rot} ${l.x} ${l.y})"`:""} pointer-events="none">${esc(l.t)}</text>`; });
+  g+=`<path data-drive="1" d="${path}" fill="none" stroke="rgba(0,0,0,0)" stroke-width="${w}" stroke-linejoin="${J}" style="cursor:pointer" pointer-events="stroke"/>`;
+  if(isSel){
+    const rr=hr();
+    G.handles.forEach(h=>{ g+=`<g data-dh="${h.key}" style="cursor:${h.cur}"><circle cx="${h.x}" cy="${h.y}" r="${rr}" fill="#fff" stroke="#2f7f95" stroke-width="${rr*.2}"/><text x="${h.x}" y="${h.y+rr*.32}" font-size="${rr*.9}" font-weight="700" fill="#2f7f95" text-anchor="middle" pointer-events="none">${h.g}</text></g>`; });
+  }
+  gDrive.innerHTML=g;
+}
+function render(){
+  const R=analyze();
+  drawDrive(R);
+  // selected on top
+  const order=state.items.slice().sort((a,b)=>(a.id===sel)-(b.id===sel) || (TYPES[a.t].kind==="green"?-1:0)-(TYPES[b.t].kind==="green"?-1:0));
+  gItems.innerHTML=order.map(it=>itemSVG(it,R[it.id])).join("");
+  renderSel(R); renderWarn(R); renderStats();
+}
+
+let lastSel=null;
+const setR=(id,v,min,max)=>{const el=document.getElementById(id); el.min=min; el.max=max; if(document.activeElement!==el) el.value=v; document.getElementById(id+"v").textContent=fmt(v)+"′";};
+const showRow=(id,on)=>{document.getElementById(id).closest(".dr").style.display=on?"flex":"none";};
+function renderSel(R){
+  const bar=document.getElementById("selbar");
+  const isDrive=sel==="drive"&&state.drive.on;
+  document.getElementById("driveRows").classList.toggle("on",isDrive);
+  document.getElementById("driveBtns").classList.toggle("hide",!isDrive);
+  document.getElementById("itemBtns").classList.toggle("hide",isDrive);
+  if(isDrive){
+    const D=state.drive, G=driveGeom();
+    bar.classList.add("on"); document.body.classList.add("editing"); document.getElementById("sizeRows").classList.remove("on");
+    document.querySelectorAll("[data-dtype]").forEach(b=>b.classList.toggle("on",b.dataset.dtype===(D.type==="angle"?"angle":D.side)));
+    const ang=D.type==="angle";
+    ["dS","dD","dR"].forEach(id=>showRow(id,!ang)); ["dY","dX","dC"].forEach(id=>showRow(id,ang));
+    setR("dW",D.w,6,24);
+    if(ang){
+      document.getElementById("selT").textContent=`Angled driveway — ${fmt(D.w)}′ lane · ≈${fmt(G.area)} SF`;
+      document.getElementById("selD").textContent=`In from Frenchmen ${fmt(D.yF-D.w/2)}–${fmt(D.yF+D.w/2)}′ back from St. Claude · out to St. Claude ${fmt(D.xS-D.w/2)}–${fmt(D.xS+D.w/2)}′ from Frenchmen`;
+      setR("dY",D.yF,Math.ceil(D.w/2),Math.floor(LOT_H-D.w/2)); setR("dX",D.xS,Math.ceil(D.w/2),Math.floor(LOT_W-D.w/2)); setR("dC",D.c,0,Math.floor(Math.min(D.xS,D.yF)));
+    } else {
+      const S=sideInfo(), fr=D.side==="fren";
+      document.getElementById("selT").textContent=`U driveway on ${fr?"Frenchmen":"St. Claude"} — ${fmt(D.xr-D.xl+D.w)}′ overall · ${fmt(D.w)}′ lanes · ≈${fmt(G.area)} SF`;
+      document.getElementById("selD").textContent=`Curb cuts ${fmt(D.xl-D.w/2)}–${fmt(D.xl+D.w/2)}′ and ${fmt(D.xr-D.w/2)}–${fmt(D.xr+D.w/2)}′ from the ${fr?"St. Claude":"Frenchmen"} line · reaches ${fmt(D.d+D.w/2)}′ into the lot`;
+      setR("dS",D.xr-D.xl+D.w,2*D.w+2,S.alongMax); setR("dD",D.d+D.w/2,D.w+1,S.depthMax); setR("dR",D.r,0,Math.floor(Math.min((D.xr-D.xl)/2,D.d)));
+    }
+    lastSel="drive"; return;
+  }
+  const it=state.items.find(i=>i.id===sel);
+  if(!it){bar.classList.remove("on");document.body.classList.remove("editing");lastSel=null;return;}
+  document.body.classList.add("editing");
+  const isBus=TYPES[it.t].kind==="bus";
+  document.getElementById("sizeRows").classList.add("on");
+  document.getElementById("sW").step=isBus?.5:1;
+  setR("sL",it.l,isBus?15:2,isBus?45:84); setR("sW",it.w,isBus?7:2,isBus?10:56);
+  lastSel=it.id;
+  const r=R[it.id];
+  bar.classList.add("on");
+  const extra=TYPES[it.t].kind==="green"?` · ${fmt(it.l*it.w)} SF`:"";
+  document.getElementById("selT").textContent=`${label(it)} — ${fmt(it.l)}′ × ${fmt(it.w)}′${extra} · ${((it.r%360)+360)%360}°`;
+  document.getElementById("selD").textContent=
+    `From property lines: St. Claude ${fmt(r.minY)}′ · Frenchmen ${fmt(r.minX)}′ · east ${fmt(LOT_W-r.maxX)}′ · rear ${fmt(LOT_H-r.maxY)}′`;
+}
+function renderWarn(R){
+  const w=[];
+  state.items.forEach(it=>{
+    const r=R[it.id];
+    if(r.out) w.push(`<div>⚠ ${esc(label(it))} crosses a property line</div>`);
+    if(r.hit.length) w.push(`<div>⚠ ${esc(label(it))} overlaps ${esc([...new Set(r.hit)].join(", "))}</div>`);
+  });
+  if(R.driveHitsBldg) w.push(`<div>⚠ Driveway runs into the existing building</div>`);
+  R.onDrive.forEach(a=>w.push(`<div class="tight">◔ ${esc(a)} sits on the driveway</div>`));
+  R.pairs.forEach(([a,b])=>w.push(`<div class="tight">◔ ${esc(a)} is closer than ${state.opts.halo}′ to ${esc(b)}</div>`));
+  const el=document.getElementById("warn");
+  const max=window.matchMedia("(max-width:760px)").matches?1:5;
+  if(!w.length && state.items.length) w.push(`<div class="good">✓ Everything fits inside the lot</div>`);
+  el.innerHTML=w.slice(0,max).join("")+(w.length>max?`<div>+${w.length-max} more…</div>`:"");
+}
+function renderStats(){
+  let foot=0,green=0; const buses=[];
+  state.items.forEach(it=>{
+    const k=TYPES[it.t].kind, a=it.l*it.w;
+    if(k==="green") green+=a; else foot+=a;
+    if(k==="bus") buses.push(it.l);
+  });
+  const bArea=state.opts.bldg?BLDG_AREA:0;
+  const need=LOT_AREA*0.15;
+  const used=foot+bArea;
+  document.getElementById("stats").innerHTML=`
+    <span>Lot area</span><span class="v">4,704 SF</span>
+    <span>Buses</span><span class="v">${buses.length}${buses.length?` (${buses.map(l=>fmt(l)+"′").join(", ")})`:""}</span>
+    <span>Driveway (approx.)</span><span class="v">${state.drive.on?fmt(driveArea())+" SF":"off"}</span>
+    <span>Pieces footprint</span><span class="v">${fmt(foot)} SF</span>
+    <span>Existing building (approx.)</span><span class="v">${state.opts.bldg?fmt(bArea)+" SF":"hidden"}</span>
+    <span>Covered (pieces + building)</span><span class="v">${Math.round(used/LOT_AREA*100)}%</span>
+    <span>Open lot left (rough)</span><span class="v">${fmt(Math.max(0,LOT_AREA-used-green-driveArea()))} SF</span>
+    <span>Green / permeable (15% min = 706 SF)</span><span class="v ${green>=need?'ok':'bad'}">${fmt(green)} SF ${green>=need?'✓':'✗'}</span>`;
+}
+
+/* ---------- view / zoom ---------- */
+function applyView(){svg.setAttribute("viewBox",`${view.x} ${view.y} ${view.w} ${view.h}`); if(sel!==null) reqRender();}
+function fit(){
+  const r=svg.getBoundingClientRect(); const ar=(r.width||800)/(r.height||600);
+  if(ar<0.9){ const w=96, h=w/ar; view={x:-8,y:-27,w,h}; applyView(); return; } // phones: lot near the top, room for the editor below
+  const box={x:-22,y:-24,w:122,h:96};
+  let w=box.w,h=box.h;
+  if(w/h<ar) w=h*ar; else h=w/ar;
+  view={x:box.x+(box.w-w)/2,y:box.y+(box.h-h)/2,w,h}; applyView();
+}
+function zoomAt(s,cx,cy){
+  const nw=Math.min(500,Math.max(12,view.w*s)); s=nw/view.w;
+  view.x=cx-(cx-view.x)*s; view.y=cy-(cy-view.y)*s; view.w*=s; view.h*=s; applyView();
+}
+function toSvg(clientX,clientY,inv){
+  const p=svg.createSVGPoint(); p.x=clientX; p.y=clientY;
+  return p.matrixTransform(inv||svg.getScreenCTM().inverse());
+}
+
+/* ---------- interaction ---------- */
+const ptrs=new Map(); let mode=null, drag=null;
+svg.addEventListener("pointerdown",e=>{
+  svg.setPointerCapture(e.pointerId);
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===2){ startPinch(); return; }
+  if(ptrs.size>2) return;
+  const rotEl=e.target.closest("[data-rot]"), itEl=e.target.closest("[data-id]");
+  const dhEl=e.target.closest("[data-dh]"), drEl=e.target.closest("[data-drive]");
+  const inv=svg.getScreenCTM().inverse();
+  const p=toSvg(e.clientX,e.clientY,inv);
+  if(dhEl){ mode="dh"; drag={key:dhEl.dataset.dh}; e.preventDefault(); return; }
+  if(drEl && !itEl){ sel="drive"; mode="dbody"; drag={p0:p,D0:{...state.drive}}; render(); e.preventDefault(); return; }
+  if(rotEl){
+    const it=find(+rotEl.dataset.rot); mode="rot"; drag={it,startR:it.r}; e.preventDefault(); return;
+  }
+  if(itEl){
+    const it=find(+itEl.dataset.id); sel=it.id; mode="drag";
+    drag={it,ox:p.x-it.x,oy:p.y-it.y,sx:e.clientX,sy:e.clientY,moved:false};
+    render(); e.preventDefault(); return;
+  }
+  mode="pan"; drag={inv,p0:p,v0:{...view},sx:e.clientX,sy:e.clientY,moved:false}; svg.classList.add("panning");
+});
+svg.addEventListener("pointermove",e=>{
+  if(!ptrs.has(e.pointerId)) return;
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(mode==="pinch"){ doPinch(); return; }
+  if(!drag) return;
+  if(mode==="drag"){
+    const p=toSvg(e.clientX,e.clientY);
+    const it=drag.it; it.x=p.x-drag.ox; it.y=p.y-drag.oy; snapPos(it);
+    drag.moved=true; render();
+  } else if(mode==="rot"){
+    const p=toSvg(e.clientX,e.clientY); const it=drag.it;
+    let a=Math.atan2(p.y-it.y,p.x-it.x)*180/Math.PI;
+    a=state.opts.snap?Math.round(a/5)*5:Math.round(a);
+    it.r=((a%360)+360)%360; snapPos(it); render();
+  } else if(mode==="dh"){
+    const p=toSvg(e.clientX,e.clientY), D=state.drive, rnd=v=>state.opts.snap?Math.round(v):r1(v), k=drag.key;
+    if(D.type==="angle"){
+      if(k==="yF") D.yF=rnd(p.y); else if(k==="xS") D.xS=rnd(p.x); else if(k==="c") D.c=rnd((D.xS-p.x)+(D.yF-p.y));
+    } else {
+      const fr=D.side==="fren", along=fr?p.y:p.x, depth=fr?p.x:p.y;
+      if(k==="xl") D.xl=rnd(along); else if(k==="xr") D.xr=rnd(along); else D.d=rnd(depth);
+    }
+    fixDrive(); render();
+  } else if(mode==="dbody"){
+    const p=toSvg(e.clientX,e.clientY), D=state.drive, D0=drag.D0, rnd=v=>state.opts.snap?Math.round(v):r1(v);
+    const dx=p.x-drag.p0.x, dy=p.y-drag.p0.y;
+    if(D.type==="angle"){ D.xS=rnd(D0.xS+dx); D.yF=rnd(D0.yF+dy); }
+    else {
+      const S=sideInfo(), shift=D.side==="fren"?dy:dx, span=D0.xr-D0.xl;
+      const nl=clamp(rnd(D0.xl+shift),D.w/2,S.alongMax-D.w/2-span); D.xl=nl; D.xr=nl+span;
+    }
+    fixDrive(); render();
+  } else if(mode==="pan"){
+    if(Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)>4) drag.moved=true;
+    const p1=toSvg(e.clientX,e.clientY,drag.inv);
+    view.x=drag.v0.x+drag.p0.x-p1.x; view.y=drag.v0.y+drag.p0.y-p1.y; applyView();
+  }
+});
+function endPtr(e){
+  ptrs.delete(e.pointerId);
+  if(mode==="pinch"){ if(ptrs.size<2){mode=null;drag=null;} return; }
+  if(mode==="pan" && drag && !drag.moved){ sel=null; render(); }
+  if(mode==="drag"||mode==="rot"||mode==="dh"||mode==="dbody") save();
+  mode=null; drag=null; svg.classList.remove("panning");
+}
+svg.addEventListener("pointerup",endPtr); svg.addEventListener("pointercancel",endPtr);
+function startPinch(){
+  if(mode==="drag"||mode==="rot"||mode==="dh"||mode==="dbody") save();
+  const [a,b]=[...ptrs.values()];
+  const inv=svg.getScreenCTM().inverse();
+  mode="pinch";
+  drag={inv,v0:{...view},d0:Math.hypot(a.x-b.x,a.y-b.y)||1,m0:toSvg((a.x+b.x)/2,(a.y+b.y)/2,inv)};
+}
+function doPinch(){
+  const [a,b]=[...ptrs.values()];
+  const d=Math.hypot(a.x-b.x,a.y-b.y)||1;
+  let s=drag.d0/d; const nw=Math.min(500,Math.max(12,drag.v0.w*s)); s=nw/drag.v0.w;
+  const m1=toSvg((a.x+b.x)/2,(a.y+b.y)/2,drag.inv);
+  view={x:drag.m0.x-(m1.x-drag.v0.x)*s,y:drag.m0.y-(m1.y-drag.v0.y)*s,w:drag.v0.w*s,h:drag.v0.h*s}; applyView();
+}
+svg.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const p=toSvg(e.clientX,e.clientY);
+  zoomAt(Math.exp(e.deltaY*(e.ctrlKey?0.01:0.0015)),p.x,p.y);
+},{passive:false});
+document.getElementById("zin").onclick=()=>zoomAt(1/1.3,view.x+view.w/2,view.y+view.h/2);
+document.getElementById("zout").onclick=()=>zoomAt(1.3,view.x+view.w/2,view.y+view.h/2);
+document.getElementById("zfit").onclick=fit;
+
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select")) return;
+  const it=find(sel); if(!it) return;
+  const st=e.shiftKey?5:1; let hit=true;
+  if(e.key==="ArrowLeft") it.x-=st; else if(e.key==="ArrowRight") it.x+=st;
+  else if(e.key==="ArrowUp") it.y-=st; else if(e.key==="ArrowDown") it.y+=st;
+  else if(e.key==="r"||e.key==="R") rotate(it,90);
+  else if(e.key==="[") rotate(it,-15); else if(e.key==="]") rotate(it,15);
+  else if(e.key==="Delete"||e.key==="Backspace") {del(it);}
+  else if(e.key==="Escape") {sel=null;}
+  else hit=false;
+  if(hit){e.preventDefault(); if(find(sel)) snapPos(find(sel)); render(); save();}
+});
+
+function find(id){return state.items.find(i=>i.id===id);}
+function rotate(it,d){it.r=((it.r+d)%360+360)%360;}
+function del(it){state.items=state.items.filter(i=>i!==it); sel=null;}
+
+document.getElementById("selbar").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const it=find(sel); if(!it) return;
+  const a=b.dataset.act;
+  if(a==="rl") rotate(it,-15); if(a==="rr") rotate(it,15); if(a==="r90") rotate(it,90);
+  if(a==="dup"){ const c={...it,id:nextId++,x:it.x+3,y:it.y+3}; snapPos(c); state.items.push(c); sel=c.id; }
+  if(a==="del") del(it);
+  if(find(sel)) snapPos(find(sel));
+  render(); save();
+});
+
+["dS","dW","dD","dR","dY","dX","dC"].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener("input",()=>{
+    const D=state.drive, v=+el.value;
+    if(id==="dY") D.yF=v; else if(id==="dX") D.xS=v; else if(id==="dC") D.c=v;
+    else if(id==="dS"){ // overall outside width of the U, keep it centered, slide back inside the lot if needed
+      const S=sideInfo(), c=(D.xl+D.xr)/2, span=Math.max(D.w+2,v-D.w);
+      let xl=c-span/2; xl=clamp(xl,D.w/2,S.alongMax-D.w/2-span);
+      D.xl=state.opts.snap?Math.round(xl*2)/2:xl; D.xr=D.xl+span;
+    }
+    else if(id==="dW"){ const outer=D.d+D.w/2; D.w=v; D.d=outer-v/2; }
+    else if(id==="dD") D.d=v-D.w/2;
+    else D.r=v;
+    fixDrive(); render();
+  });
+  el.addEventListener("change",save);
+});
+["sL","sW"].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener("input",()=>{ const it=find(sel); if(!it) return; if(id==="sL") it.l=+el.value; else it.w=+el.value; snapPos(it); render(); });
+  el.addEventListener("change",save);
+});
+document.getElementById("dTypes").addEventListener("click",e=>{
+  const b=e.target.closest("[data-dtype]"); if(!b) return;
+  const D=state.drive, t=b.dataset.dtype;
+  if(t==="angle"){ D.type="angle"; }
+  else if(D.type!=="u"||D.side!==t){
+    const changedSide=D.side!==t; D.type="u"; D.side=t;
+    if(changedSide){ const S=sideInfo(); D.xl=D.w/2+3; D.xr=S.alongMax-D.w/2-3; }
+  }
+  fixDrive(); render(); save();
+});
+document.getElementById("driveDone").onclick=()=>{ sel=null; render(); };
+document.getElementById("driveHide").onclick=()=>{ state.drive.on=false; sel=null; syncOpts(); render(); save(); };
+document.getElementById("optDrive").addEventListener("change",e=>{ state.drive.on=e.target.checked; if(state.drive.on){ fixDrive(); sel="drive"; } else if(sel==="drive") sel=null; render(); save(); });
+/* ---------- adding ---------- */
+function addItem(t,extra){
+  const T=TYPES[t];
+  const it=Object.assign({id:nextId++,t,l:T.l,w:T.w,r:0,label:""},extra||{});
+  // try to find a free spot scanning the lot
+  const cand=[];
+  for(const r of [0,90]) for(let y=1;y<LOT_H;y+=1) for(let x=1;x<LOT_W;x+=1) cand.push([x,y,r]);
+  const R0=(c)=>{ it.r=c[2]; const [hx,hy]=halfExtents(it); it.x=c[0]+hx; it.y=c[1]+hy; };
+  let placed=false;
+  const halo=TYPES[t].kind==="bus"?(+state.opts.halo||0):0;
+  for(const pad of (halo?[halo,0]:[0])){
+    for(const c of cand){
+      R0(c);
+      const P=corners(it), H=corners(it,pad);
+      if(P.some(p=>p[0]<0||p[1]<0||p[0]>LOT_W||p[1]>LOT_H)) continue;
+      if(state.opts.bldg && hitsBldg(H)) continue;
+      if(drivePolys().some(q=>overlap(P,q))) continue;
+      if(state.items.some(o=>overlap(H,corners(o)))) continue;
+      placed=true; break;
+    }
+    if(placed) break;
+  }
+  if(!placed){ it.r=0; it.x=LOT_W/2; it.y=LOT_H/2; }
+  snapPos(it);
+  state.items.push(it); sel=it.id; render(); save();
+  if(window.matchMedia("(max-width:760px)").matches) setSheet(false);
+}
+document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>addItem(b.dataset.add)));
+document.getElementById("addCustom").onclick=()=>{
+  const l=Math.max(1,Math.min(200,+document.getElementById("cLen").value||12));
+  const w=Math.max(1,Math.min(200,+document.getElementById("cWid").value||8));
+  const lab=(document.getElementById("cLabel").value||"").trim().slice(0,30)||`${fmt(l)}′×${fmt(w)}′`;
+  addItem("custom",{l,w,label:lab});
+};
+
+/* ---------- options ---------- */
+function bindOpt(id,key,isCheck){
+  const el=document.getElementById(id);
+  el.addEventListener("change",()=>{state.opts[key]=isCheck?el.checked:+el.value; drawOverlay(); state.items.forEach(snapPos); render(); save();});
+}
+bindOpt("optSnap","snap",true); bindOpt("optBldg","bldg",true); bindOpt("optSight","sight",true); bindOpt("optHalo","halo",false);
+function syncOpts(){
+  document.getElementById("optSnap").checked=!!state.opts.snap;
+  document.getElementById("optBldg").checked=!!state.opts.bldg;
+  document.getElementById("optSight").checked=!!state.opts.sight;
+  document.getElementById("optHalo").value=String(state.opts.halo);
+  document.getElementById("optDrive").checked=!!state.drive.on;
+}
+
+/* ---------- tabs / sheet ---------- */
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.id===b.dataset.tab));
+  setSheet(true);
+}));
+const panel=document.getElementById("panel"), tog=document.getElementById("toggleSheet");
+function setSheet(open){ const was=!panel.classList.contains("min"); panel.classList.toggle("min",!open); tog.textContent=open?"▾":"▴ More"; if(was!==open && typeof fit==="function" && view.w!==100) setTimeout(fit,30); }
+tog.onclick=()=>setSheet(panel.classList.contains("min"));
+if(window.matchMedia("(max-width:760px)").matches) setSheet(false);
+
+/* ---------- persistence / codes ---------- */
+function serialize(){
+  const D=state.drive;
+  return {v:1,o:state.opts,i:state.items.map(it=>[it.t,r1(it.x),r1(it.y),it.l,it.w,it.r,it.label||""]),dr:[D.on?1:0,D.xl,D.xr,D.d,D.w,D.r,D.type==="angle"?2:(D.side==="fren"?1:0),D.yF,D.xS,D.c]};
+}
+function load(obj){
+  if(!obj||!Array.isArray(obj.i)) throw new Error("bad");
+  const items=[];
+  obj.i.forEach(a=>{
+    if(!Array.isArray(a)) return;
+    if(a[0]==="bus23"||a[0]==="bus40") a=["bus",...a.slice(1)];
+    if(!TYPES[a[0]]) return;
+    const n=v=>Number.isFinite(+v)?+v:0;
+    items.push({id:nextId++,t:a[0],x:n(a[1]),y:n(a[2]),l:Math.max(1,Math.min(200,n(a[3])||TYPES[a[0]].l)),w:Math.max(1,Math.min(200,n(a[4])||TYPES[a[0]].w)),r:((n(a[5])%360)+360)%360,label:String(a[6]||"").slice(0,30)});
+  });
+  state.items=items.slice(0,200);
+  if(obj.o&&typeof obj.o==="object"){
+    state.opts={snap:obj.o.snap!==false,bldg:obj.o.bldg!==false,sight:!!obj.o.sight,halo:[0,3,5,10].includes(+obj.o.halo)?+obj.o.halo:3};
+  }
+  if(Array.isArray(obj.dr)&&obj.dr.length>=6&&obj.dr.every(v=>Number.isFinite(+v))){
+    const a=obj.dr.map(Number), t=a.length>=10?a[6]:0;
+    state.drive={...DRIVE_DEFAULT,on:!!a[0],xl:a[1],xr:a[2],d:a[3],w:a[4],r:a[5],type:t===2?"angle":"u",side:t===1?"fren":"stc"};
+    if(a.length>=10){ state.drive.yF=a[7]; state.drive.xS=a[8]; state.drive.c=a[9]; }
+  } else state.drive={...DRIVE_DEFAULT};
+  fixDrive();
+  sel=null; syncOpts(); drawOverlay(); render();
+}
+let saveT=null;
+function save(){ clearTimeout(saveT); saveT=setTimeout(()=>{ try{localStorage.setItem(STORE,JSON.stringify(serialize()));}catch(e){} },250); }
+const enc=o=>"SC2100:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+const dec=s=>{ s=String(s).trim(); const i=s.indexOf("SC2100:"); if(i<0) throw new Error("no code"); return JSON.parse(decodeURIComponent(escape(atob(s.slice(i+7).split(/\s/)[0])))); };
+const codeBox=document.getElementById("codeBox"), codeMsg=document.getElementById("codeMsg");
+const onWeb=(()=>{ try{ return /^https?:$/.test(location.protocol) && !!location.hostname && !/claude|anthropic|localhost|127\.0\.0\.1/i.test(location.hostname); }catch(e){ return false; } })();
+async function copyText(t,okMsg){
+  try{ await navigator.clipboard.writeText(t); codeMsg.textContent=okMsg; }
+  catch(e){ codeBox.value=t; codeBox.focus(); codeBox.select(); codeMsg.textContent="Selected above — copy it from there."; }
+}
+document.getElementById("shareLink").onclick=()=>{
+  const code=enc(serialize());
+  if(!onWeb){ codeBox.value=code; copyText(code,"Share links that carry a layout work on the GitHub version. Copied the layout code instead."); return; }
+  const url=location.origin+location.pathname+"#p="+encodeURIComponent(code.slice(7));
+  codeBox.value=url; copyText(url,"Link copied. Anyone who opens it sees this layout.");
+};
+function loadFromHash(){
+  try{ const h=location.hash||""; if(h.indexOf("#p=")===0){ load(dec("SC2100:"+decodeURIComponent(h.slice(3)))); save(); return true; } }catch(e){}
+  return false;
+}
+if(onWeb) window.addEventListener("hashchange",loadFromHash);
+document.getElementById("copyCode").onclick=async()=>{
+  const c=enc(serialize()); codeBox.value=c;
+  try{ await navigator.clipboard.writeText(c); codeMsg.textContent="Copied. Paste it into a text with the link."; }
+  catch(e){ codeBox.focus(); codeBox.select(); codeMsg.textContent="Code is selected above — copy it from there."; }
+};
+document.getElementById("loadCode").onclick=()=>{
+  try{ load(dec(codeBox.value)); save(); codeMsg.textContent="Layout loaded."; }
+  catch(e){ codeMsg.textContent="That doesn't look like a layout code (it starts with SC2100:)."; }
+};
+let clearArm=false;
+document.getElementById("clearAll").onclick=e=>{
+  if(!clearArm){ clearArm=true; e.target.textContent="Tap again to clear"; setTimeout(()=>{clearArm=false;e.target.textContent="Clear all";},2500); return; }
+  clearArm=false; e.target.textContent="Clear all"; state.items=[]; sel=null; render(); save();
+};
+
+/* ---------- shared plans (db) ---------- */
+const planMsg=document.getElementById("planMsg"), planList=document.getElementById("planList");
+let db=null, plans=[];
+function renderPlans(){
+  if(!plans.length){ planList.innerHTML=`<p class="note">No saved plans yet.</p>`; return; }
+  planList.innerHTML=plans.map(p=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid #eceee6;padding:6px 0">
+    <span><b>${esc(p.name)}</b><br><span class="note">${esc(p.summary||"")}${p.updated?" · "+new Date(p.updated).toLocaleDateString():""}</span></span>
+    <span><button class="btn small" data-load="${esc(p.id)}">Load</button></span></div>`).join("");
+}
+planList.addEventListener("click",e=>{
+  const b=e.target.closest("[data-load]"); if(!b) return;
+  const p=plans.find(x=>x.id===b.dataset.load); if(!p) return;
+  try{ load(JSON.parse(p.layout)); save(); planMsg.textContent=`Loaded “${p.name}”.`; }catch(err){ planMsg.textContent="That plan couldn't be read."; }
+});
+document.getElementById("savePlan").onclick=async()=>{
+  const name=(document.getElementById("planName").value||"").trim().slice(0,60);
+  if(!name){ planMsg.textContent="Give the plan a name first."; return; }
+  if(!db){ planMsg.textContent="Shared plans aren't available in this view. Use “Copy layout code” on the Layout tab instead."; return; }
+  const id=(name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"plan").slice(0,60);
+  const bl=state.items.filter(i=>TYPES[i.t].kind==="bus").map(i=>fmt(i.l)+"′");
+  planMsg.textContent="Saving…";
+  try{
+    await db.collection("plans").doc(id).set({name,layout:JSON.stringify(serialize()),summary:`${bl.length} bus${bl.length===1?"":"es"}${bl.length?" ("+bl.join(", ")+")":""}, ${state.items.length} pieces`,updated:Date.now()});
+    planMsg.textContent=`Saved “${name}”.`;
+  }catch(err){
+    planMsg.textContent = err&&err.code==="invalid_argument" ? "You can view plans here but not save them (view-only access). Use “Copy layout code” instead." : "Couldn't save right now — try again, or use “Copy layout code”.";
+  }
+};
+renderPlans();
+(async()=>{
+  try{
+    if(!(window.claude&&window.claude.use)){ throw 0; }
+    db=await window.claude.use("db");
+    if(!db) throw 0;
+    planMsg.textContent="Loading saved plans…";
+    const t=setTimeout(()=>{planMsg.textContent="Saved plans can't be reached yet.";},10000);
+    db.collection("plans").orderBy("updated","desc").limit(50).onSnapshot(snap=>{
+      if(!snap.metadata.fromCache){ clearTimeout(t); if(planMsg.textContent.startsWith("Loading")||planMsg.textContent.startsWith("Saved plans can't")) planMsg.textContent=""; }
+      plans=snap.docs.filter(d=>d.exists).map(d=>{const x=d.data()||{};return {id:d.id,name:String(x.name||d.id),layout:String(x.layout||""),summary:String(x.summary||""),updated:+x.updated||0};});
+      renderPlans();
+    },err=>{ clearTimeout(t); planMsg.textContent="Saved plans aren't available right now."; });
+  }catch(e){
+    db=null;
+    document.getElementById("plansIntro").textContent="Shared saved plans need you to be signed in to Claude. You can still share any layout with “Copy layout code” on the Layout tab.";
+  }
+})();
+
+/* ---------- init ---------- */
+drawBase();
+let loaded=false;
+if(onWeb && loadFromHash()) loaded=true;
+if(!loaded){ try{ const raw=localStorage.getItem(STORE); if(raw){ load(JSON.parse(raw)); loaded=true; } }catch(e){} }
+if(onWeb && !(window.claude&&window.claude.use)){ const tb=document.querySelector('[data-tab="t-plans"]'); if(tb) tb.style.display="none"; }
+if(!loaded){
+  state.items=[
+    {id:nextId++,t:"bus",x:8,y:36,l:32,w:8,r:90,label:""}
+  ];
+  syncOpts(); drawOverlay(); render();
+}
+fit();
+let rT=null, lastW=window.innerWidth; window.addEventListener("resize",()=>{ if(Math.abs(window.innerWidth-lastW)<2) return; lastW=window.innerWidth; clearTimeout(rT); rT=setTimeout(fit,150);});
+})();
+</script>
+</body>
+</html>
