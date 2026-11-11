@@ -345,6 +345,10 @@ function drawBase(){
   s.push(`<text x="31" y="71" font-size="1.9" fill="#6b5a3e" text-anchor="middle">1031 Frenchmen St. (house)</text>`);
   s.push(`<text x="31" y="73.6" font-size="1.6" fill="#6b5a3e" text-anchor="middle">28′ × 112′ lot runs behind both St. Claude lots</text>`);
   s.push(`</g>`);
+  // structure behind 2112 St. Claude, on the rear (east) end of the 1031 Frenchmen lot (city building footprint, ~408 SF)
+  s.push(`<g data-nb="rear" style="cursor:pointer"><rect x="92.5" y="58.6" width="19" height="21.6" fill="#ddcca2" stroke="#9c8558" stroke-width=".3"/>`);
+  s.push(`<path d="M92.5 58.6L111.5 80.2M111.5 58.6L92.5 80.2" stroke="#c4ae7e" stroke-width=".15"/>`);
+  s.push(`<text x="102" y="68.6" font-size="1.6" fill="#5c4b30" text-anchor="middle">rear building</text><text x="102" y="70.8" font-size="1.35" fill="#5c4b30" text-anchor="middle">≈19′ × 22′</text><text x="102" y="73" font-size="1.2" fill="#2f7f95" text-anchor="middle">tap for info</text></g>`);
   // wood fence seen along the rear line in Feb 2025 street view
   s.push(`<path d="M0 56.35H84" stroke="#a0714f" stroke-width=".35" stroke-dasharray=".9 .5" pointer-events="none"/>`);
   s.push(`<text x="${LOT_W/2+16}" y="58.4" font-size="1.45" fill="#8a4b3c" text-anchor="middle" font-style="italic">shared rear lot line (wood fence) — no alley in this square</text>`);
@@ -548,6 +552,9 @@ const NB={
   "1031":{t:"1031 Frenchmen St. — behind the lot (south)",h:`<div>Sq. 374, Lot 21 · 28′ × 112′ · a double (two-family house) · zoned HMC-2 · runs behind both 2100 and 2112 St. Claude</div>
     <div style="margin-top:6px"><b>Owner of record:</b> a private individual. Their name and tax mailing address are public on the city's <a href="https://property.nola.gov/" target="_blank" rel="noopener">Property Viewer</a> (search tax bill <b>37W102206</b>). They aren't copied onto this shareable page.</div>
     <div class="note" style="margin-top:6px">The tax bills go to an out-of-state address, so it's likely a rental. A letter to the mailing address on file is the usual first contact.</div>`},
+  "rear":{t:"Rear building — behind 2112 St. Claude",h:`<div>A separate structure, ≈19′ × 22′ (about 400 SF), directly behind 2112 St. Claude.</div>
+    <div style="margin-top:6px">It sits on the back (east) end of the long <b>1031 Frenchmen St.</b> lot, not on 2112's lot. It's past the back corner of your lot, beyond the rear line, not on 2100.</div>
+    <div class="note" style="margin-top:6px">From the city's building-footprint layer (traced from aerial imagery). It shows as a brown roof in the aerial photo. Its size and position are approximate, and its use isn't on record here.</div>`},
   "bldg":{t:"Existing structures on 2100 St. Claude",h:`<div><b>Tire shop (enclosed):</b> ≈23′ × 18′, about 34–52′ back from St. Claude. Its gable end faces Frenchmen.</div>
     <div><b>Canopy:</b> ≈19′ × 12′ open gabled canopy on posts in front of the shop, toward St. Claude.</div>
     <div><b>Small box:</b> ≈7′ × 8′ attached on the Frenchmen side.</div>
