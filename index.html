@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2100 St. Claude Ave — Site Planner</title>
+<title>Site Planner 5000</title>
 <style>
 :root{
   --paper:#f1e2b3; --ink:#2b2418; --muted:#6e5f45; --line:#dcc893;
@@ -22,7 +22,9 @@ main{flex:1;display:flex;min-height:0}
 #svg{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
 #svg.panning{cursor:grabbing}
 aside{width:350px;display:flex;flex-direction:column;border-left:1px solid var(--line);background:var(--panel);min-height:0}
-.quick{display:flex;gap:6px;padding:10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.quick{display:none;gap:6px;padding:10px;border-bottom:1px solid var(--line)}
+.pieces .btn{flex:1 1 calc(50% - 6px);font-weight:600}
+aside{width:300px}
 .tabs{display:flex;border-bottom:1px solid var(--line)}
 .tabs button{flex:1;border:0;background:none;padding:10px 4px;font:inherit;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
@@ -84,11 +86,11 @@ body.editing #hint{display:none}
 @media (max-width:760px){
   header{padding:7px 12px}
   header h1{font-size:15px}
-  header .sub{display:none}
+  header .sub{font-size:12px}
   main{flex-direction:column}
   aside{width:auto;border-left:0;border-top:1px solid var(--line);max-height:50dvh;flex:none}
-  aside.min .tabs, aside.min .pbody{display:none}
-  .collapse{display:inline-block}
+  .quick{display:flex}
+  aside.min .pbody{display:none}
   #hint{display:none}
   #selbar{top:auto;bottom:8px;left:8px;right:8px;transform:none;width:auto;max-width:none;max-height:62%;overflow:auto;border-radius:16px;padding:10px 12px}
   #warn{top:8px;bottom:auto;max-width:calc(100% - 70px)}
@@ -106,8 +108,8 @@ body.editing #hint{display:none}
 </head>
 <body>
 <header>
-  <h1>2100 St. Claude Ave — Site Planner</h1>
-  <span class="sub">84′ × 56′ corner lot at Frenchmen St · New Orleans (Marigny) · Zoned HMC-2 · 4,704 SF</span>
+  <h1>Site Planner 5000</h1>
+  <span class="sub">2100 St. Claude Ave · New Orleans</span>
 </header>
 <main>
   <div id="stage">
@@ -188,110 +190,23 @@ body.editing #hint{display:none}
 
   <aside id="panel">
     <div class="quick">
-      <button class="btn bus" data-add="bus">+ Add bus (32′)</button>
-      <button class="btn collapse" id="toggleSheet" aria-label="Show or hide panel">▾</button>
-    </div>
-    <div class="tabs">
-      <button class="on" data-tab="t-layout">Layout</button>
-      <button data-tab="t-key">Key &amp; Codes</button>
+      <button class="btn bus" id="toggleSheet" aria-label="Show or hide pieces">+ Add pieces</button>
     </div>
     <div class="pbody">
-      <!-- LAYOUT -->
       <section class="tab on" id="t-layout">
-        <h3>Add more pieces</h3>
-        <div class="row">
-          <button class="btn small" id="addDrive">+ Driveway</button>
-          <button class="btn small" data-add="stall">+ Car stall 9×18</button>
-          <button class="btn small" data-add="tent">+ Canopy 10×10</button>
-          <button class="btn small" data-add="green">+ Green space 10×10</button>
-          <button class="btn small" data-add="container20">+ 20′ container</button>
+        <h3>Add pieces</h3>
+        <div class="row pieces">
+          <button class="btn" data-add="bus">+ Bus</button>
+          <button class="btn" id="addDrive">+ Driveway</button>
+          <button class="btn" data-add="stall">+ Car stall</button>
+          <button class="btn" data-add="tent">+ Canopy</button>
+          <button class="btn" data-add="green">+ Green space</button>
+          <button class="btn" data-add="container20">+ Container</button>
+          <button class="btn" data-add="custom">+ Box</button>
         </div>
-        <div class="row">
-          <input type="text" id="cLabel" placeholder="Custom label" style="flex:1;min-width:110px">
-          <input type="number" id="cLen" value="12" min="1" max="84" step="0.5" aria-label="Length ft">
-          <span class="note">×</span>
-          <input type="number" id="cWid" value="8" min="1" max="84" step="0.5" aria-label="Width ft">
-          <button class="btn small" id="addCustom">Add</button>
-        </div>
-
-        <h3>View &amp; options</h3>
-        <label class="chk"><input type="checkbox" id="optSnap" checked> Snap to 1-ft grid (rotation in 5° steps)</label>
-        <label class="chk"><input type="checkbox" id="optBldg" checked> Show existing building (and treat it as an obstacle)</label>
-        <div class="row"><span>Clearance around buses:</span>
-          <select id="optHalo"><option value="0">none</option><option value="3" selected>3 ft</option><option value="5">5 ft</option><option value="10">10 ft</option></select>
-        </div>
-
-        <h3>Site numbers</h3>
-        <div class="stats" id="stats"></div>
-
-        <p class="note" style="margin-top:14px">Tap any piece or the driveway to resize, rotate or delete it. Your layout saves on this device.</p>
+        <p class="note" style="margin-top:14px">Tap anything on the map to resize, rotate or delete it. Your layout saves on this device.</p>
         <div class="row"><button class="btn small danger" id="clearAll">Start over</button></div>
       </section>
-
-      <!-- KEY -->
-      <section class="tab" id="t-key">
-        <h3>Map key</h3>
-        <div class="legend">
-          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="url(#g10)" stroke="#d1495b" stroke-width="2" stroke-dasharray="5 3"/></svg><span><b>Property line</b> — 84′ on St. Claude × 56′ on Frenchmen</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="3" y="3" width="24" height="10" fill="none" stroke="#2f7f95" stroke-width="1.5"/></svg><span><b>Buildable area</b> — HMC-2 requires 0′ setbacks, so it matches the property line</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="#fff" stroke="#6f8196"/></svg><span><b>Existing building</b> — the enclosed tire shop (solid) with its open canopy toward St. Claude (dashed). Outline from the city's building footprints, checked against Feb 2025 street-level photos. Tap it, or a neighboring lot, for details.</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="2" width="28" height="12" rx="2" fill="#fff" stroke="#4a5868"/></svg><span><b>Bus</b> — starts 32′ × 8′; tap it for length (15–45′) and width sliders; ▶ marks the front. Every piece has length and width sliders.</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="2" y="2" width="26" height="12" rx="3" fill="none" stroke="#5a9bb0" stroke-dasharray="3 2"/></svg><span><b>Clearance ring</b> — your chosen walk-around/egress space</span>
-          <svg class="sw" viewBox="0 0 30 16"><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="#8ea2ba" stroke-width="6.6"/><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="#e3eaf3" stroke-width="6"/><path d="M5 0V9Q5 13 9 13H21Q25 13 25 9V0" fill="none" stroke="url(#driveHatch)" stroke-width="6"/></svg><span><b>Driveway</b> — a U on St. Claude, a U on Frenchmen, or angled (in on Frenchmen, out on St. Claude). Tap it to switch type, use the sliders, or drag its handles.</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="1" width="28" height="14" fill="url(#grass)" stroke="#4f8a3c"/></svg><span><b>Green space</b> — counts toward the 15% permeable minimum</span>
-          <svg class="sw" viewBox="0 0 30 16"><rect x="1" y="2" width="28" height="12" rx="2" fill="#fff" stroke="#d1495b" stroke-width="2.5"/></svg><span><b>Red outline</b> — piece crosses a property line or overlaps something</span>
-        </div>
-
-        <h3>HMC-2 zoning (CZO Table 10-2)</h3>
-        <table class="code">
-          <tr><td>Front yard setback</td><td>None (0′)</td></tr>
-          <tr><td>Interior side yard</td><td>None (0′)</td></tr>
-          <tr><td>Corner side yard</td><td>None (0′)</td></tr>
-          <tr><td>Rear yard</td><td>None (0′)</td></tr>
-          <tr><td>Maximum building height</td><td>50′</td></tr>
-          <tr><td>Maximum FAR</td><td>2.2 ≈ 10,349 SF</td></tr>
-          <tr><td>Non-residential use over 10,000 SF</td><td>Conditional use</td></tr>
-          <tr><td>Min. permeable open space</td><td>15% ≈ 706 SF</td></tr>
-          <tr><td>Open space ratio (residential / mixed-use)</td><td>0.30 ≈ 1,411 SF</td></tr>
-          <tr><td>Min. lot area per unit (4+ units)</td><td>600 SF/unit</td></tr>
-          <tr><td>Parking lot as the <i>main</i> use</td><td>Conditional use</td></tr>
-          <tr><td>Parking lot accessory to another use</td><td>Permitted*</td></tr>
-          <tr><td>Parking structure</td><td>Permitted</td></tr>
-        </table>
-        <p class="note">*Per the CZO use table footnote (Sec. 22.8.B.2.a). All required open space must be permeable.</p>
-
-        <h3>Other reviews to expect</h3>
-        <div class="callout"><b>Historic review (HDLC):</b> the city's GIS puts this lot in the <i>Faubourg Marigny</i> local historic district, <b>Full Control</b>. New construction, demolition and exterior changes need HDLC approval.</div>
-        <div class="callout"><b>Curb cuts:</b> every driveway option needs two new curb cuts across the sidewalk. New or widened curb cuts need city permits, and with the HDLC and the EC design overlay on this lot, expect them to be reviewed too.</div>
-        <div class="callout"><b>Buses on site:</b> zoning above covers buildings and land use. Using buses as lodging, a bar, food vending or storage is permitted separately — check with Safety &amp; Permits before you bid. The CZO also requires most activity on a lot to be indoors, with listed exceptions (Sec. 21.5).</div>
-        <div class="callout"><b>Overlays on this parcel (city GIS):</b> RDO-1 Residential Diversity Overlay · EC Enhancement Corridor Design Overlay (design review) · Transient Lodging Interim Zoning District · Data Center Interim Zoning District.</div>
-        <div class="callout"><b>Behind &amp; beside:</b> no alley. The rear line is shared with 1031 Frenchmen St. (Sq. 374 Lot 21, 28′ × 112′, a double), which runs behind both this lot and 2112 St. Claude. The east side line is shared with 2112 St. Claude (28′ × 56′, a bar building). Both are also zoned HMC-2. Easements or servitudes don't show on city maps, so ask for the title work and a survey.</div>
-
-        <h3>Property facts</h3>
-        <table class="code">
-          <tr><td>Legal description</td><td>Sq. 374, Lot N-1</td></tr>
-          <tr><td>Parcel (APN)</td><td>37W102207</td></tr>
-          <tr><td>Existing structure</td><td>352 SF, former tire shop</td></tr>
-          <tr><td>Auction (SVN Gilmore, online)</td><td>Dec 1 – Dec 8, 4 PM CST</td></tr>
-          <tr><td>Starting bid</td><td>$100,000</td></tr>
-          <tr><td>Buyer's premium / deposit</td><td>10% / 10% in 48 hrs</td></tr>
-          <tr><td>Terms</td><td>Cash, as-is, with reserve</td></tr>
-        </table>
-        <p class="note">This is not a survey. The lot size comes from the assessor's record (84′ × 56′); the city's GIS parcel outline draws it a bit bigger (about 89′ × 58′). The building outline is the city's building footprint, checked against Feb 2025 street-level photos (the city layer's rear wing isn't there anymore). Street widths are approximate. Get a current survey before you commit to a layout.</p>
-
-        <h3>Sources</h3>
-        <ul class="src">
-          <li><a href="https://czo.nola.gov/article-10/" target="_blank" rel="noopener">New Orleans CZO, Article 10 (HMC-2)</a></li>
-          <li><a href="https://www.svngilmoreauction.com/auctions/detail/bw172209" target="_blank" rel="noopener">SVN Gilmore auction listing</a></li>
-          <li><a href="https://www.mceneryco.com/wp-content/uploads/2025/01/2100-St-Claude-Ave.pdf" target="_blank" rel="noopener">McEnery offering memorandum</a></li>
-          <li><a href="https://c21ccgroup.c21.com/property/2100-st-claude-avenue-new-orleans-la-70116-REN035948413" target="_blank" rel="noopener">MLS listing (legal description)</a></li>
-          <li><a href="https://sites.google.com/view/no-arc-121923/2242-saint-claude-ave" target="_blank" rel="noopener">HDLC review, 2242 St. Claude (district)</a></li>
-          <li><a href="https://gis.nola.gov/arcgis/rest/services/LandBase/Parcels/MapServer/0" target="_blank" rel="noopener">City of New Orleans GIS — parcels, zoning, historic district, overlays</a></li>
-          <li><a href="https://maps.nola.gov/server/rest/services/Basemap/BuildingFootprints/MapServer/0" target="_blank" rel="noopener">City of New Orleans GIS — building footprints</a></li>
-        </ul>
-      </section>
-
-      <!-- PLANS -->
     </div>
   </aside>
 </main>
@@ -315,16 +230,16 @@ const TYPES={
   stall:{name:"Car stall",l:18,w:9,kind:"stall"},
   tent:{name:"Canopy",l:10,w:10,kind:"tent"},
   green:{name:"Green space",l:10,w:10,kind:"green"},
-  container20:{name:"20′ container",l:20,w:8,kind:"box"},
-  custom:{name:"Custom",l:12,w:8,kind:"box"}
+  container20:{name:"Container",l:20,w:8,kind:"box"},
+  custom:{name:"Box",l:12,w:8,kind:"box"}
 };
-const STORE="stclaude2100-plan-v3";
+const STORE="siteplanner5000-v1";
 const svg=document.getElementById("svg");
 const gBase=document.getElementById("base"), gOver=document.getElementById("overlay"), gItems=document.getElementById("items");
 const NS="http://www.w3.org/2000/svg";
 
 const DRIVE_DEFAULT={on:true,type:"u",side:"stc",xl:9,xr:75,d:11,w:12,r:8,yF:28,xS:22,c:12};
-let state={items:[],opts:{snap:true,bldg:true,sight:false,halo:3},drive:{...DRIVE_DEFAULT}};
+let state={items:[],opts:{snap:true,bldg:true,sight:false,halo:0},drive:{...DRIVE_DEFAULT}};
 const gDrive=document.getElementById("drive");
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 function sideInfo(){
@@ -437,17 +352,17 @@ function drawBase(){
   s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="#fbf3d8"/>`);
   s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="url(#g10)"/>`);
   s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#2f7f95" stroke-width=".25" opacity=".9"/>`);
-  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#d1495b" stroke-width=".55" stroke-dasharray="2.2 1.1"/>`);
+  s.push(`<rect x="0" y="0" width="${LOT_W}" height="${LOT_H}" fill="none" stroke="#4f9a74" stroke-width=".55" stroke-dasharray="2.2 1.1"/>`);
   // corner pins
-  [[0,0],[LOT_W,0],[LOT_W,LOT_H],[0,LOT_H]].forEach(([x,y])=>s.push(`<circle cx="${x}" cy="${y}" r=".7" fill="#fff" stroke="#d1495b" stroke-width=".35"/>`));
+  [[0,0],[LOT_W,0],[LOT_W,LOT_H],[0,LOT_H]].forEach(([x,y])=>s.push(`<circle cx="${x}" cy="${y}" r=".7" fill="#fff" stroke="#4f9a74" stroke-width=".35"/>`));
   // ticks/labels every 10 ft
   for(let x=0;x<=LOT_W;x+=10){s.push(`<text x="${x}" y="-1.2" font-size="1.5" fill="#3b4a40" text-anchor="middle">${x}′</text>`);}
   s.push(`<text x="${LOT_W}" y="-3.2" font-size="1.5" fill="#3b4a40" text-anchor="middle">84′</text>`);
   for(let y=10;y<=LOT_H;y+=10){s.push(`<text x="-1.2" y="${y+.5}" font-size="1.5" fill="#3b4a40" text-anchor="end">${y}′</text>`);}
   s.push(`<text x="-1.2" y="${LOT_H+.5}" font-size="1.5" fill="#3b4a40" text-anchor="end">56′</text>`);
   // dimension strings
-  s.push(`<g fill="#d1495b" font-weight="700"><text x="${LOT_W/2}" y="-5.6" font-size="2.2" text-anchor="middle">84′-0″ property line along St. Claude</text></g>`);
-  s.push(`<text x="0" y="0" font-size="2.2" font-weight="700" fill="#d1495b" text-anchor="middle" transform="translate(-4.4 ${LOT_H/2}) rotate(-90)">56′-0″ along Frenchmen</text>`);
+  s.push(`<g fill="#4f9a74" font-weight="700"><text x="${LOT_W/2}" y="-5.6" font-size="2.2" text-anchor="middle">84′-0″ property line along St. Claude</text></g>`);
+  s.push(`<text x="0" y="0" font-size="2.2" font-weight="700" fill="#4f9a74" text-anchor="middle" transform="translate(-4.4 ${LOT_H/2}) rotate(-90)">56′-0″ along Frenchmen</text>`);
   s.push(`<text x="${LOT_W/2}" y="${LOT_H-1.4}" font-size="1.6" fill="#2f7f95" text-anchor="middle" opacity=".9">HMC-2 · 0′ setbacks · buildable area = property line · 4,704 SF</text>`);
   // north arrow + scale
   s.push(`<g transform="translate(96 -2)"><circle r="3.4" fill="#fff" stroke="#3b4a40" stroke-width=".2"/><path d="M0 -2.8L1.3 1.6L0 .8L-1.3 1.6Z" fill="#1f2a24"/><text y="-4.2" font-size="1.8" font-weight="700" text-anchor="middle" fill="#1f2a24">N</text></g>`);
@@ -705,26 +620,7 @@ function renderWarn(R){
   if(!w.length && state.items.length) w.push(`<div class="good">✓ Everything fits inside the lot</div>`);
   el.innerHTML=w.slice(0,max).join("")+(w.length>max?`<div>+${w.length-max} more…</div>`:"");
 }
-function renderStats(){
-  let foot=0,green=0; const buses=[];
-  state.items.forEach(it=>{
-    const k=TYPES[it.t].kind, a=it.l*it.w;
-    if(k==="green") green+=a; else foot+=a;
-    if(k==="bus") buses.push(it.l);
-  });
-  const bArea=state.opts.bldg?BLDG_AREA:0;
-  const need=LOT_AREA*0.15;
-  const used=foot+bArea;
-  document.getElementById("stats").innerHTML=`
-    <span>Lot area</span><span class="v">4,704 SF</span>
-    <span>Buses</span><span class="v">${buses.length}${buses.length?` (${buses.map(l=>fmt(l)+"′").join(", ")})`:""}</span>
-    <span>Driveway (approx.)</span><span class="v">${state.drive.on?fmt(driveArea())+" SF":"off"}</span>
-    <span>Pieces footprint</span><span class="v">${fmt(foot)} SF</span>
-    <span>Existing building (approx.)</span><span class="v">${state.opts.bldg?fmt(bArea)+" SF":"hidden"}</span>
-    <span>Covered (pieces + building)</span><span class="v">${Math.round(used/LOT_AREA*100)}%</span>
-    <span>Open lot left (rough)</span><span class="v">${fmt(Math.max(0,LOT_AREA-used-green-driveArea()))} SF</span>
-    <span>Green / permeable (15% min = 706 SF)</span><span class="v ${green>=need?'ok':'bad'}">${fmt(green)} SF ${green>=need?'✓':'✗'}</span>`;
-}
+function renderStats(){}
 
 /* ---------- view / zoom ---------- */
 function applyView(){svg.setAttribute("viewBox",`${view.x} ${view.y} ${view.w} ${view.h}`); if(sel!==null) reqRender();}
@@ -935,33 +831,11 @@ function addItem(t,extra){
   if(window.matchMedia("(max-width:760px)").matches) setSheet(false);
 }
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>addItem(b.dataset.add)));
-document.getElementById("addCustom").onclick=()=>{
-  const l=Math.max(1,Math.min(200,+document.getElementById("cLen").value||12));
-  const w=Math.max(1,Math.min(200,+document.getElementById("cWid").value||8));
-  const lab=(document.getElementById("cLabel").value||"").trim().slice(0,30)||`${fmt(l)}′×${fmt(w)}′`;
-  addItem("custom",{l,w,label:lab});
-};
-
 /* ---------- options ---------- */
-function bindOpt(id,key,isCheck){
-  const el=document.getElementById(id);
-  el.addEventListener("change",()=>{state.opts[key]=isCheck?el.checked:+el.value; drawOverlay(); state.items.forEach(snapPos); render(); save();});
-}
-bindOpt("optSnap","snap",true); bindOpt("optBldg","bldg",true); bindOpt("optHalo","halo",false);
-function syncOpts(){
-  document.getElementById("optSnap").checked=!!state.opts.snap;
-  document.getElementById("optBldg").checked=!!state.opts.bldg;
-  document.getElementById("optHalo").value=String(state.opts.halo);
-}
-
+function syncOpts(){}
 /* ---------- tabs / sheet ---------- */
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
-  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.id===b.dataset.tab));
-  setSheet(true);
-}));
 const panel=document.getElementById("panel"), tog=document.getElementById("toggleSheet");
-function setSheet(open){ const was=!panel.classList.contains("min"); panel.classList.toggle("min",!open); tog.textContent=open?"▾":"▴ More"; if(was!==open && typeof fit==="function" && view.w!==100) setTimeout(fit,30); }
+function setSheet(open){ const was=!panel.classList.contains("min"); panel.classList.toggle("min",!open); tog.textContent=open?"Done ▾":"+ Add pieces"; if(was!==open && typeof fit==="function" && view.w!==100) setTimeout(fit,30); }
 tog.onclick=()=>setSheet(panel.classList.contains("min"));
 if(window.matchMedia("(max-width:760px)").matches) setSheet(false);
 
@@ -982,7 +856,7 @@ function load(obj){
   });
   state.items=items.slice(0,200);
   if(obj.o&&typeof obj.o==="object"){
-    state.opts={snap:obj.o.snap!==false,bldg:obj.o.bldg!==false,sight:!!obj.o.sight,halo:[0,3,5,10].includes(+obj.o.halo)?+obj.o.halo:3};
+    state.opts={snap:true,bldg:true,sight:false,halo:0};
   }
   if(Array.isArray(obj.dr)&&obj.dr.length>=6&&obj.dr.every(v=>Number.isFinite(+v))){
     const a=obj.dr.map(Number), t=a.length>=10?a[6]:0;

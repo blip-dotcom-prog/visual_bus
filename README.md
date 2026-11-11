@@ -1,6 +1,6 @@
-# visual_bus — 2100 St. Claude Ave site planner
+# Site Planner 5000
 
-An interactive site plan for **2100 St. Claude Avenue, New Orleans** (corner of Frenchmen St., Marigny). It works on iPhone and desktop.
+A simple, playful site planner for **2100 St. Claude Avenue, New Orleans** (corner of Frenchmen St., Marigny). It works on iPhone and desktop.
 
 **Open it:** https://blip-dotcom-prog.github.io/visual_bus/ (after GitHub Pages is turned on)
 
@@ -12,8 +12,7 @@ An interactive site plan for **2100 St. Claude Avenue, New Orleans** (corner of 
 - Every piece has length and width sliders
 - An editable driveway: a U on St. Claude, a U on Frenchmen, or angled (in on Frenchmen, out on St. Claude)
 - Tap a neighboring lot for its owner-of-record info
-- Warnings when something crosses a property line, overlaps the building, sits on the driveway, or breaks a clearance you set
-- Site numbers, including whether you meet the 15% permeable open space HMC-2 requires
+- Warnings when something crosses a property line, overlaps the building or sits on the driveway
 - Each person's layout saves in their own browser, so everyone can play around separately
 
 ## Zoning summary (HMC-2, New Orleans CZO Article 10)
